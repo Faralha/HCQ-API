@@ -27,6 +27,6 @@ INSERT INTO 'student' ('id','name','email', 'password', 'city', 'address', 'phon
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 INSERT INTO admin (id, name, email)
-VALUES ('SJKT-0004', 'Anjay', 'anjay@gmail.com');
+VALUES ('SJKT-0002', 'Anjay', 'anjay@gmail.com');
 
 SELECT id FROM student ORDER BY id ASC LIMIT 1;

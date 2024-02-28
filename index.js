@@ -5,11 +5,13 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const db = require('./db.js');
+var cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const port = process.env.PORT;
 
 app.use(bodyParser.json());
+app.use(cookieParser())
 app.use(cors());
 
 // JWT VERIFICATION MIDDLEWARE
@@ -22,7 +24,6 @@ const verifyToken = (token, callback) => {
       }
     });
   };
-
 const authenticateToken = (req, res, next) => {
     const bearerHeader = req.headers['authorization'];
   
@@ -41,10 +42,27 @@ const authenticateToken = (req, res, next) => {
     }
   };
   
+// ADMIN MIDDLEWARE
+function isAdmin (req, res, next){
+  const token = req.headers['authorization'].split(' ')[1];
+  const adminToken = jwt.verify(token, process.env.TOKEN_SECRET);
 
+  if(adminToken !== 'undefined'){
+    if(adminToken.role === 'admin'){
+      
+      next();
+    
+    } else {
+      res.status(400).json({message: "You're not an admin!"});
+    }
+  } else {
+    res.status(400);
+  }
+
+}
 
 // USERS -- Dummies
-app.get('/user', authenticateToken, (req, res) => {
+app.get('/user', authenticateToken, isAdmin, (req, res) => {
 
     
     res.json({
@@ -122,7 +140,15 @@ app.post('/login', async (req, res) => {
         const role = "student"
 
         const token = generateAccessToken({email, role});
-        res.json({token: token});
+        res.cookie(
+          "api-auth", token,
+          {
+            expire: 360000 + Date.now(),
+            httpOnly: true
+          }
+        );
+        
+        res.json({message: 'Authenticated.'})
 
     } catch (error) {
         console.error(error);
@@ -131,25 +157,28 @@ app.post('/login', async (req, res) => {
 
 })
 
+// ADMIN LOGIN
 app.post('/admin/login', authenticateToken, async (req, res) => {
 
   const token = req.headers['authorization'].split(' ')[1];
 
   try {
 
-    const email = jwt.verify(token, process.env.TOKEN_SECRET).email;
+    const email = await jwt.verify(token, process.env.TOKEN_SECRET).email;
 
     const [verify, error] = await db.execute('SELECT email FROM admin WHERE email = ?', [email]);
 
-    if (email !== verify[0].email || error){
-      res.status(400).json({error: 'Unauthorized'})
+    if (email !== verify[0].email || error || null){
+      res.status(400);
     }
 
-    res.status(200).json({message: "Authorized"});
+    const role = 'admin';
+    const adminToken = generateAccessToken({email, role});
+    res.send({token: adminToken});
     
   } catch (error) {
     console.error(error);
-    res.status(500).json({error: 'Internal Server Error!'});
+    res.status(500);
   }
 
 })
@@ -160,7 +189,7 @@ app.post('/getUsers', authenticateToken, async (req, res) => {
 
 function generateAccessToken(email){
     return jwt.sign((email), process.env.TOKEN_SECRET, {
-      expiresIn: '1d'
+      expiresIn: '3h'
     });
 }
 
