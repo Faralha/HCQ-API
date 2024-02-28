@@ -1,6 +1,6 @@
-const db = require('../db');
+const db = require('../../db');
 const bcrypt = require('bcrypt');
-const {generateAccessToken} = require('../middleware/token');
+const {generateAccessToken} = require('../../middleware/token');
 
 let login = async (req, res) => {
     const {email, password} = req.body;

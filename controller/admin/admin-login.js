@@ -1,20 +1,18 @@
 const jwt = require('jsonwebtoken');
-const db = require('../db');
+const db = require('../../db');
+const getEmail = require('../../function/getEmail')
 
 
-const {generateAccessToken} = require('../middleware/token')
+const {generateAccessToken} = require('../../middleware/token')
 
-let adminLogin = async (req, res) => {
-    const token = req.cookies['api-auth'];
-    console.log(token);
-  
+let adminLogin = async (req, res) => {  
     try {
-      const email = await jwt.verify(token, process.env.TOKEN_SECRET).email;
-  
+      const {email, password} = req.body;
       const [verify, error] = await db.execute('SELECT email FROM admin WHERE email = ?', [email]);
-  
-      if (email !== verify[0].email || error || null){
-        res.status(400);
+      
+
+      if (verify.length <= 0){
+        return res.status(401).json({alert: "Unauthorized"});
       }
   
       const role = 'admin';

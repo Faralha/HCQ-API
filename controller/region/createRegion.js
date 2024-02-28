@@ -1,5 +1,5 @@
-const db = require('../db');
-const getEmail = require('../function/getEmail');
+const db = require('../../db');
+const getEmail = require('../../function/getEmail');
 
 
 

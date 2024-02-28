@@ -17,9 +17,27 @@ CREATE TABLE admin (
 	PRIMARY KEY (id)
 );
 
+CREATE TABLE mentor (
+	id VARCHAR(10) NOT NULL,
+	name VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	phonenumber VARCHAR(255) NOT NULL,
+	shortRegion VARCHAR(5) NOT NULL,
+	isVerified BOOLEAN NOT NULL DEFAULT 0,
+	PRIMARY KEY (id)
+);
+
 CREATE TABLE region (
 	id VARCHAR(5) NOT NULL,
 	region VARCHAR(50) NOT NULL,
 	createdBy VARCHAR(255) NOT NULL,
 	PRIMARY KEY (id)
+);
+
+CREATE TABLE JENIS (
+	jenis VARCHAR(255) NOT NULL,
+	keterangan VARCHAR(255),
+	createdBy VARCHAR(255) NOT NULL,
+	PRIMARY KEY (jenis)
 );

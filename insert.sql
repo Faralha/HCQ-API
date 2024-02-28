@@ -10,4 +10,6 @@ VALUES (?, ?, ?, ?, ?, ?, ?);
 INSERT INTO admin (id, name, email)
 VALUES ('SJKT-0002', 'Anjay', 'anjay@gmail.com');
 
+INSERT INTO mentor (id, name, email, password,phonenumber, shortRegion) VALUES ('MJKT-0001','Anjay','anjay@gmail.com','anjay','01213131','JKT');
+
 SELECT id FROM student ORDER BY id ASC LIMIT 1;
