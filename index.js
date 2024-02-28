@@ -14,34 +14,9 @@ app.use(bodyParser.json());
 app.use(cookieParser())
 app.use(cors());
 
-// JWT VERIFICATION MIDDLEWARE
-const verifyToken = (token, callback) => {
-    jwt.verify(token, process.env.TOKEN_SECRET, function(err, authData) {
-      if (err) {
-        callback(err, null);
-      } else {
-        callback(null, authData);
-      }
-    });
-  };
-const authenticateToken = (req, res, next) => {
-    const bearerHeader = req.headers['authorization'];
-  
-    if (bearerHeader !== 'undefined') {
-      const bearerToken = bearerHeader.split(' ')[1];
-      verifyToken(bearerToken, (err, authData) => {
-        if (err) {
-          res.status(403).json({message: err}); // Unauthorized
-        } else {
-          req.authData = authData;
-          next(); // Lanjut ke handler berikutnya
-        }
-      });
-    } else {
-      res.status(403).json({message: "error"}); // Unauthorized
-    }
-  };
-  
+const {generateAccessToken, authenticateToken, verifyToken} = require('./middleware/token.js');
+
+
 // ADMIN MIDDLEWARE
 function isAdmin (req, res, next){
   const token = req.headers['authorization'].split(' ')[1];
@@ -62,7 +37,7 @@ function isAdmin (req, res, next){
 }
 
 // USERS -- Dummies
-app.get('/user', authenticateToken, isAdmin, (req, res) => {
+app.get('/user', authenticateToken, (req, res) => {
 
     
     res.json({
@@ -183,15 +158,13 @@ app.post('/admin/login', authenticateToken, async (req, res) => {
 
 })
 
-app.post('/getUsers', authenticateToken, async (req, res) => {
-
+app.get('/getUsers', async (req, res) => {
+  const cookie = req.cookies['api-auth'];
+  console.log(cookie);
+  res.status(200).json({message: "Accessed."});
 })
 
-function generateAccessToken(email){
-    return jwt.sign((email), process.env.TOKEN_SECRET, {
-      expiresIn: '3h'
-    });
-}
+
 
 
 
