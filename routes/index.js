@@ -1,7 +1,5 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
-const db = require('../db');
 
 const isAdmin = require('../middleware/isAdmin');
 const isMentor = require('../middleware/isMentor');
@@ -35,7 +33,6 @@ router.post('/admin/class/createSubClass', authenticateToken, isAdmin, require('
 router.get('/mentor', authenticateToken, isMentor, async (req, res) => {
     res.json("Hi");
 });
-
-router.post('/class/create', authenticateToken, isMentor)
+router.post('/mentor/class/create', authenticateToken, isMentor, require('../controller/mentor/createClass'), async (req, res) => {});
 
 module.exports = router;
