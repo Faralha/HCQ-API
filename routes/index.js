@@ -15,10 +15,11 @@ router.post('/mentor/register', require('../controller/mentor/mentorRegister.js'
 router.post('/mentor/login', require('../controller/mentor/mentorLogin'), async (req, res) =>{});
 
 
-// PUBLIC ROUTES (authentication still a must)
+// PUBLIC ROUTES (for Students, authentication is a must)
 router.get('/user', authenticateToken, require('../controller/user'), async (req, res) => {});
 router.get('/region', authenticateToken, require('../controller/region.js'), async (req, res) => {});
-router.get('/class', authenticateToken, require('../controller/classes.js'), async(req, res) => {})
+router.get('/class', authenticateToken, require('../controller/classes/classes.js'), async(req, res) => {});
+router.get('/attendance', authenticateToken, require('../controller/classes/attendance/attendance'), async(req,res) => {});
 
 
 // ADMIN ONLY ROUTES
@@ -27,12 +28,12 @@ router.post('/admin/mentor/verify', authenticateToken, isAdmin, require('../cont
 router.post('/admin/region/create', authenticateToken, isAdmin, require('../controller/region/createRegion.js'), async (req, res) => {})
 router.post('/admin/region/delete', authenticateToken, isAdmin, require('../controller/region/deleteRegion.js'), async (req, res) => {})
 router.post('/admin/class/createSubClass', authenticateToken, isAdmin, require('../controller/admin/createSubclass'), async (req, res) => {})
-
+router.post('/admin/semester/create', authenticateToken, isAdmin, require('../controller/admin/createSemester'), async(req, res) => {});
 
 // MENTOR ONLY ROUTES
 router.get('/mentor', authenticateToken, isMentor, async (req, res) => {
     res.json("Hi");
 });
-router.post('/mentor/class/create', authenticateToken, isMentor, require('../controller/mentor/createClass'), async (req, res) => {});
+router.post('/mentor/class/create', authenticateToken, isMentor, require('../controller/mentor/createClass.js'), async (req, res) => {});
 
 module.exports = router;

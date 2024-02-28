@@ -13,3 +13,5 @@ VALUES ('SJKT-0002', 'Anjay', 'anjay@gmail.com');
 INSERT INTO mentor (id, name, email, password,phonenumber, shortRegion) VALUES ('MJKT-0001','Anjay','anjay@gmail.com','anjay','01213131','JKT');
 
 SELECT id FROM student ORDER BY id ASC LIMIT 1;
+
+INSERT INTO class (id, mentor, semester, jenis, id_region) values ('TAHSIN-JKT_0001','MTGS-0001','1','Tahsin', 'TGS'); 
