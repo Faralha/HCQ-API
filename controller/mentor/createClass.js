@@ -4,7 +4,7 @@ const getEmail = require('../../function/getEmail');
 
 const createClass = async (req, res) => {
     try {
-        const {subClass, shortRegion} = req.body;
+        const {subClass} = req.body;
         
         const [semesterRaw] = await db.execute('SELECT semester FROM semester ORDER BY semester DESC LIMIT 1');
         const semester = semesterRaw[0].semester;
@@ -18,9 +18,9 @@ const createClass = async (req, res) => {
         [email]);
         const id_mentor = id_mentor_raw[0].id;
 
-        // TAHSIN-JKT_0001 (PK example)
-        const [similarClass] = await db.execute('SELECT id FROM class WHERE id_region = ? AND jenis = ?',
-        [shortRegion, subClass]);
+        // TAHSIN-0001 (PK example)
+        const [similarClass] = await db.execute('SELECT id FROM class WHERE jenis = ?',
+        [subClass]);
 
         var classIndex;
         if(similarClass.length <= 0){
@@ -32,13 +32,12 @@ const createClass = async (req, res) => {
         const id = subClass.toUpperCase() + '_' + classIndex.toString().padStart(4, '0');
 
         // INSERTION
-        await db.execute('INSERT INTO class (id, mentor, semester, jenis, id_region) values (?, ?, ?, ?, ?)',
-        [id, id_mentor, semester, subClass, shortRegion]);
+        await db.execute('INSERT INTO class (id, mentor, semester, jenis) values (?, ?, ?, ?)',
+        [id, id_mentor, semester, subClass]);
 
         res.send({message: `Class ${id} created!`});
         
     } catch (error) {
-        console.log(error);
         res.status(500);
     }
 }
