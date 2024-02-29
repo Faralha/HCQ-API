@@ -23,6 +23,7 @@ router.get('/class', authenticateToken, require('../controller/classes/classes.j
 router.get('/attendance', authenticateToken, require('../controller/classes/attendance/attendance'), async(req,res) => {});
 router.post('/attendance/:classes', authenticateToken, require('../controller/classes/attendance/queryAttendance'), async(req,res)=>{});
 router.get('/student', authenticateToken, require('../controller/student/queryStudent'), async (req, res) => {});
+router.get('/student/class', authenticateToken, require('../controller/student/queryClass'), async(req,res)=>{});
 
 
 // ADMIN ONLY ROUTES
