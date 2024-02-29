@@ -20,6 +20,7 @@ router.get('/user', authenticateToken, require('../controller/user'), async (req
 router.get('/region', authenticateToken, require('../controller/region.js'), async (req, res) => {});
 router.get('/class', authenticateToken, require('../controller/classes/classes.js'), async(req, res) => {});
 router.get('/attendance', authenticateToken, require('../controller/classes/attendance/attendance'), async(req,res) => {});
+router.post('/attendance/:classes', authenticateToken, require('../controller/classes/attendance/queryAttendance'), async(req,res)=>{});
 
 
 // ADMIN ONLY ROUTES
@@ -35,5 +36,6 @@ router.get('/mentor', authenticateToken, isMentor, async (req, res) => {
     res.json("Hi");
 });
 router.post('/mentor/class/create', authenticateToken, isMentor, require('../controller/mentor/createClass.js'), async (req, res) => {});
+router.post('/mentor/attendance/create', authenticateToken, isMentor, require('../controller/mentor/newAttendance'), async(req,res) => {});
 
 module.exports = router;
