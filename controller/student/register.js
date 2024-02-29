@@ -1,13 +1,28 @@
 const db = require('../../db');
 const bcrypt = require('bcrypt');
+const sanitizeInput = require('../../function/sanitizeInput');
 
 let register = async (req, res) => {
-    var { email, name, password, city, address, phonenumber } = req.body;
+
+        const sanitizedBody = {};
+
+        for (const key in req.body) {
+            if (req.body.hasOwnProperty(key)) {
+                sanitizedBody[key] = sanitizeInput(req.body[key]);
+            }
+        }
+
+    const {email, name, password, city, address, phonenumber} = sanitizedBody;
+
     
         // BCRYPT PASSWORD HASH
         const hashedPassword = await bcrypt.hash(password, 10);
     
         try {
+
+            // FETCH CURRENT SEMESTER
+            const [semesterRaw] = await db.execute('SELECT * FROM SEMESTER ORDER BY SEMESTER DESC LIMIT 1');
+            const semester = semesterRaw[0].semester;
     
             // CHECK IF EMAIL HAS BEEN USED
             const [similar] = await db.execute('SELECT email FROM student WHERE EMAIL = ?', [email]);
@@ -17,17 +32,20 @@ let register = async (req, res) => {
     
             // SUFFIX NUMBER AUTO INCREMENT
             const [getId] = await db.execute('SELECT id FROM student ORDER BY id DESC LIMIT 1;');
-            const getIdNumber = getId[0].id.split("-")[1];
-            var lastId = parseInt(getIdNumber, 10);
+            if(getId.length > 0){
+                const getIdNumber = getId[0].id.split("-")[1];
+                var lastId = parseInt(getIdNumber, 10);
+            } else {
+                lastId = 0;
+            }
     
             lastId++;
     
             // PREFIX 
-            const role = 'S' // S for Student
-            const city = 'JKT' // JKT for Jakarta as an example
+            const role = 'S'
     
             // NEW PRIMARY KEY
-            let newId = role + city + '-' + lastId.toString().padStart(4, '0');
+            let newId = role + semester + '-' + lastId.toString().padStart(4, '0');
     
             await db.execute(`INSERT INTO student ( id, name, email, password, city, address, phonenumber) VALUES (?, ?, ?, ?, ?, ?, ?);`,
             [newId, name, email, hashedPassword, city || null, address || null, phonenumber]);
@@ -35,8 +53,7 @@ let register = async (req, res) => {
             res.status(200).json({ message: 'Akun Berhasil Dibuat!'});
     
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Internal Server Error!' });
+            res.status(500);
         }
 }
 

@@ -1,9 +1,20 @@
 const db = require('../../db');
 const bcrypt = require('bcrypt');
 const {generateAccessToken} = require('../../middleware/token');
+const sanitizeInput = require('../../function/sanitizeInput');
 
 let login = async (req, res) => {
-    const {email, password} = req.body;
+
+    // SANITIZE INPUT
+    const sanitizedBody = {};
+
+    for (const key in req.body) {
+        if (req.body.hasOwnProperty(key)) {
+            sanitizedBody[key] = sanitizeInput(req.body[key]);
+        }
+    }
+
+    const {email, password} = sanitizedBody;
         
         try {
             

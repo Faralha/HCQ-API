@@ -1,11 +1,21 @@
 const db = require('../../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {generateAccessToken} = require('../../middleware/token')
+const {generateAccessToken} = require('../../middleware/token');
+const sanitizeInput = require('../../function/sanitizeInput');
 
 const mentorLogin = async (req, res) => {
     try {
-        const {email, password} = req.body;
+        const sanitizedBody = {};
+
+        for (const key in req.body) {
+            if (req.body.hasOwnProperty(key)) {
+                sanitizedBody[key] = sanitizeInput(req.body[key]);
+            }
+        }
+
+        const {email, password} = sanitizedBody;
+
 
         // VERIFY PASSWORD
         const [emailPass] = await db.execute('SELECT password FROM mentor WHERE email = ?', [email]);

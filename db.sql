@@ -1,19 +1,25 @@
 -- ADMINISTRATIVE TABLES
-CREATE TABLE 'student' (
-	'id' VARCHAR(10) NOT NULL,
-    'name' VARCHAR(255) NOT NULL,
-	'email' VARCHAR(255) NOT NULL,
-	'password' VARCHAR(255) NOT NULL,
-	'city' VARCHAR(30),
-	'address' VARCHAR(255),
-	'phonenumber' VARCHAR(255) NOT NULL,
-	UNIQUE KEY 'index1' ('id') USING BTREE,
-	PRIMARY KEY ('id')
+CREATE TABLE token (
+	token VARCHAR(64) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	PRIMARY KEY (token)
+);
+CREATE TABLE student (
+	id VARCHAR(10) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+	email VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	city VARCHAR(30),
+	address VARCHAR(255),
+	phonenumber VARCHAR(255) NOT NULL,
+	UNIQUE KEY index1 (id) USING BTREE,
+	PRIMARY KEY (id)
 );
 CREATE TABLE admin (
 	id VARCHAR(10) NOT NULL,
 	name VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL,
 	PRIMARY KEY (id)
 );
 CREATE TABLE mentor (
@@ -22,17 +28,9 @@ CREATE TABLE mentor (
 	password VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	phonenumber VARCHAR(255) NOT NULL,
-	shortRegion VARCHAR(5) NOT NULL,
 	isVerified BOOLEAN NOT NULL DEFAULT 0,
 	PRIMARY KEY (id)
 );
-CREATE TABLE region (
-	id VARCHAR(5) NOT NULL,
-	region VARCHAR(50) NOT NULL,
-	createdBy VARCHAR(255) NOT NULL,
-	PRIMARY KEY (id)
-);
-
 
 -- CLASS
 CREATE TABLE JENIS (
@@ -49,10 +47,8 @@ CREATE TABLE class (
 	mentor VARCHAR(255) NOT NULL,
 	semester INT NOT NULL,
 	jenis VARCHAR(255) NOT NULL,
-	id_region VARCHAR(5) NOT NULL,
 	FOREIGN KEY (jenis) REFERENCES jenis(jenis),
-	FOREIGN KEY (mentor) REFERENCES mentor(id),
-	FOREIGN KEY (id_region) REFERENCES region(id)
+	FOREIGN KEY (mentor) REFERENCES mentor(id)
 );
 CREATE TABLE student_class (
 	id INT AUTO_INCREMENT PRIMARY KEY,

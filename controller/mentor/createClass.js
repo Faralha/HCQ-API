@@ -29,7 +29,7 @@ const createClass = async (req, res) => {
             const classIndexRaw = similarClass[0].id.split('_')[1];
             classIndex = parseInt(classIndexRaw, 10) + 1;
         }
-        const id = subClass.toUpperCase() + '-' + shortRegion + '_' + classIndex.toString().padStart(4, '0');
+        const id = subClass.toUpperCase() + '_' + classIndex.toString().padStart(4, '0');
 
         // INSERTION
         await db.execute('INSERT INTO class (id, mentor, semester, jenis, id_region) values (?, ?, ?, ?, ?)',
