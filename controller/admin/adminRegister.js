@@ -12,7 +12,7 @@ const adminRegister = async (req, res) => {
             }
         }
 
-        const {email, password, token, name} = sanitizedBody;
+        const {email, password, token, name, city, address, phonenumber} = sanitizedBody;
 
 
         // VERIFY TOKEN
@@ -23,7 +23,11 @@ const adminRegister = async (req, res) => {
         [token, email]);
         if(verifyToken.length <= 0){
             return res.status(401).json({alert : "Invalid Token."});
-        }
+        };
+
+        // DELETE USED TOKEN
+        await db.execute('DELETE FROM token WHERE token = ? AND email = ?',
+        [token, email]);
 
         // HASH PASSWORD
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,8 +45,8 @@ const adminRegister = async (req, res) => {
 
         // INSERT
         const newId = role + '-' + lastId;
-        await db.execute('INSERT INTO admin (id, name, email, password) VALUES (?,?,?,?)',
-        [newId, name, email, hashedPassword]);
+        await db.execute('INSERT INTO admin (id, name, email, password, city, address, phonenumber) VALUES (?,?,?,?,?,?,?)',
+        [newId, name, email, hashedPassword, city || null, address || null, phonenumber]);
 
         res.json({
             message: "Admin Account Created! Please Login."

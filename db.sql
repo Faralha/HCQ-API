@@ -20,6 +20,9 @@ CREATE TABLE admin (
 	name VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	password VARCHAR(255) NOT NULL,
+	city VARCHAR(30),
+	address VARCHAR(255),
+	phonenumber VARCHAR(255) NOT NULL,
 	PRIMARY KEY (id)
 );
 CREATE TABLE mentor (
@@ -28,6 +31,8 @@ CREATE TABLE mentor (
 	password VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	phonenumber VARCHAR(255) NOT NULL,
+	city VARCHAR(30),
+	address VARCHAR(255),
 	isVerified BOOLEAN NOT NULL DEFAULT 0,
 	PRIMARY KEY (id)
 );

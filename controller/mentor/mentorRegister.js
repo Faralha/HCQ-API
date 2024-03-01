@@ -12,7 +12,7 @@ let mentorRegister = async (req, res) => {
             }
         }
         
-        const {email, name, password, phonenumber} = sanitizedBody;
+        const {email, name, password, phonenumber, address, city} = sanitizedBody;
         
         // FETCH CURRENT SEMESTER
         const [semesterRaw] = await db.execute('SELECT * FROM SEMESTER ORDER BY SEMESTER DESC LIMIT 1');
@@ -38,8 +38,8 @@ let mentorRegister = async (req, res) => {
 
         const role = 'M';
         const newId = role + semester + '-' + id.toString().padStart(4, '0');
-        await db.execute('INSERT INTO mentor (id, name, email, password, phonenumber) VALUES (?,?,?,?,?)',
-        [newId, name, email, hashedPassword, phonenumber]);
+        await db.execute('INSERT INTO mentor (id, name, email, password, phonenumber, city, address) VALUES (?,?,?,?,?,?,?)',
+        [newId, name, email, hashedPassword, phonenumber, city || null, address || null]);
 
         res.json({message: "Mentor Account has been created! Wait for verification by Admin."});
 
