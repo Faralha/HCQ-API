@@ -40,8 +40,9 @@ let login = async (req, res) => {
               "api-auth", token,
               {
                 expire: 360000 + Date.now(),
-                httpOnly: true,
-                secure: true
+                httpOnly: false,
+                secure: false,
+                sameSite: 'none'
               }
             );
             

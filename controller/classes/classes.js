@@ -4,7 +4,9 @@ const classes = async (req, res) => {
     try {
         const [kelas] = await db.execute('SELECT * FROM class')
         res.json({class : kelas});
+        console.log('kelas');
     } catch (error) {
+        console.log(error);
         res.status(500);
     }
 }
