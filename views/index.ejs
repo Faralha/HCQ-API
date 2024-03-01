@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="src/css/output.css">
+</head>
+<body>
+    <%- include('header') %>
+
+    
+    <div class="">
+        <h1 class="italic">Anjay</h1>
+    </div>
+
+
+    <form action="/cookie" method="post" id="cookie">
+        <input type="submit" value="cookie!">
+    </form>
+
+    <script>
+        document.getElementById('cookie').addEventListener('submit', function(event){
+            event.preventDefault();
+        })
+    </script>
+</body>
+</html>

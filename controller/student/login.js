@@ -45,9 +45,11 @@ let login = async (req, res) => {
               }
             );
             
+            console.log('User Login!');
             res.json({message: 'Authenticated.'})
     
         } catch (error) {
+            console.log(error);
             res.status(500).json({ error: 'Internal Server Error!' });
         }
 }
