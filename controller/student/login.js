@@ -39,16 +39,17 @@ let login = async (req, res) => {
             res.cookie(
               "api-auth", token,
               {
-                expire: 360000 + Date.now(),
-                httpOnly: false,
-                secure: false,
-                sameSite: 'none'
+                expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+                httpOnly: true,
+                secure: true,
+                sameSite: 'Lax'
               }
             );
             
             res.json({message: 'Authenticated.'})
     
         } catch (error) {
+            console.log(error);
             res.status(500).json({ error: 'Internal Server Error!' });
         }
 }
