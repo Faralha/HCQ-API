@@ -14,7 +14,7 @@ const verifyToken = (token, callback) => {
   };
 
 const authenticateToken = async (req, res, next) => {
-    const bearerHeader = await req.cookies['api-auth'];
+    const bearerHeader = await req.cookies['apiauth'];
     console.log(bearerHeader)
   
     if (bearerHeader !== 'undefined') {

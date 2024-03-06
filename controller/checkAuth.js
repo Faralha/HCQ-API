@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const checkAuth = (req, res) => {
     try {
-        const token = req.cookies['api-auth'];
+        const token = req.cookies['apiauth'];
         if(!token){
             return res.status(401);
         }
