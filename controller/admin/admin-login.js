@@ -18,7 +18,7 @@ let adminLogin = async (req, res) => {
       const role = 'admin';
       const adminToken = generateAccessToken({email, role});
       res.cookie(
-        "api-auth", adminToken,
+        "apiauth", adminToken,
         {
           expire: 360000 + Date.now(),
           httpOnly: true,

@@ -37,7 +37,7 @@ let login = async (req, res) => {
     
             const token = generateAccessToken({email, role});
             res.cookie(
-              "api-auth", token,
+              "apiauth", token,
               {
                 expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
                 httpOnly: true,
