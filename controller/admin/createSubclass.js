@@ -1,5 +1,6 @@
 const db = require('../../db');
 const getEmail = require('../../function/getEmail');
+require('dotenv').config();
 
 const createSubClass = async (req, res) => {
     try {
@@ -9,8 +10,9 @@ const createSubClass = async (req, res) => {
             return res.send({message: `Subclass / Jenis for ${subClass} already exists! Try different name?`})
         };
 
-        const token = req.cookies['api-auth'];
-        const email = getEmail(token);
+        const cookieName = process.env.COOKIE_NAME;
+
+        const token = req.cookies[cookieName];
 
         await db.execute('INSERT INTO jenis (jenis, keterangan, createdBy) VALUES (?,?,?)',
         [subClass, keterangan || null, email]);
@@ -18,6 +20,7 @@ const createSubClass = async (req, res) => {
         res.send({message: `subClass / Jenis Kelas ${subClass} has been created!`});
 
     } catch (error) {
+        console.log(error);
         res.status(500);
     }
 }

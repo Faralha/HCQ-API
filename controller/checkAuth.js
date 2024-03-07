@@ -1,8 +1,10 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const cookieName = process.env.COOKIE_NAME
 
 const checkAuth = (req, res) => {
     try {
-        const token = req.cookies['apiauth'];
+        const token = req.cookies[cookieName];
         if(!token){
             return res.status(401);
         }

@@ -29,8 +29,9 @@ router.get('/checkAuth', authenticateToken, require('../controller/checkAuth'), 
 
 // ADMIN ONLY ROUTES
 router.post('/admin/mentor/verify', authenticateToken, isAdmin, require('../controller/admin/verifyMentor'), async (req, res) => {});
-router.post('/admin/class/createSubClass', authenticateToken, isAdmin, require('../controller/admin/createSubclass'), async (req, res) => {})
+router.post('/admin/subclass', authenticateToken, isAdmin, require('../controller/admin/createSubclass'), async (req, res) => {})
 router.post('/admin/semester/create', authenticateToken, isAdmin, require('../controller/admin/createSemester'), async(req, res) => {});
+router.get('/admin/subclass', authenticateToken, isAdmin, require('../controller/admin/fetchSubclass'), async(req, res)=>{});
 
 // MENTOR ONLY ROUTES
 router.get('/mentor', authenticateToken, isMentor, async (req, res) => {

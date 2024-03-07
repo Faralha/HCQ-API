@@ -17,19 +17,24 @@ let adminLogin = async (req, res) => {
   
       const role = 'admin';
       const adminToken = generateAccessToken({email, role});
+
+      const currentTime = new Date();
+      const expireTime = new Date(currentTime.getTime() + 3 * 60 * 60 * 1000);
+
       res.cookie(
         "apiauth", adminToken,
         {
-          expire: 360000 + Date.now(),
+          expires: expireTime,
           httpOnly: true,
-          secure: true
+          secure: true,
+          sameSite: 'lax'
         }
       );
+
 
       res.status(200).json({message: "Authenticated."})
       
     } catch (error) {
-      console.error(error);
       res.status(500);
     }
 }

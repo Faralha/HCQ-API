@@ -34,10 +34,13 @@ let login = async (req, res) => {
     
             // ROLE - by default role will be student
             const role = "student"
+
+            require('dotenv').config();
+            const cookieName = process.env.COOKIE_NAME;
     
             const token = generateAccessToken({email, role});
             res.cookie(
-              "apiauth", token,
+              cookieName, token,
               {
                 expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
                 httpOnly: true,

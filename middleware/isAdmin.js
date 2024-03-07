@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 const isAdmin = async (req, res, next) => {
-    const token = req.cookies['api-auth'];
+    const cookieName = process.env.COOKIE_NAME
+    const token = req.cookies[cookieName];
     const adminToken = jwt.verify(token, process.env.TOKEN_SECRET);
 
     if(adminToken !== 'undefined'){

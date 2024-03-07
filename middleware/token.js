@@ -3,7 +3,8 @@ require('dotenv').config();
 
 
 // JWT VERIFICATION MIDDLEWARE
-const verifyToken = (token, callback) => {
+const verifyToken = (token, callback, res) => {
+
     jwt.verify(token, process.env.TOKEN_SECRET, function(err, authData) {
       if (err) {
         callback(err, null);
@@ -14,7 +15,9 @@ const verifyToken = (token, callback) => {
   };
 
 const authenticateToken = async (req, res, next) => {
-    const bearerHeader = await req.cookies['apiauth'];
+    require('dotenv').config();
+    const cookieName = process.env.COOKIE_NAME;
+    const bearerHeader = await req.cookies[cookieName];
     console.log(bearerHeader)
   
     if (bearerHeader !== 'undefined') {
