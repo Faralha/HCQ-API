@@ -37,8 +37,8 @@ router.get('/admin/subclass', authenticateToken, isAdmin, require('../controller
 router.get('/mentor', authenticateToken, isMentor, async (req, res) => {
     res.json("Hi");
 });
-router.post('/mentor/class/create', authenticateToken, isMentor, require('../controller/mentor/createClass.js'), async (req, res) => {});
-router.post('/mentor/attendance/create', authenticateToken, isMentor, require('../controller/mentor/newAttendance'), async(req,res) => {});
+router.post('/mentor/create/class', authenticateToken, isMentor, require('../controller/mentor/createClass.js'), async (req, res) => {});
+router.post('/mentor/create/attendance', authenticateToken, isMentor, require('../controller/mentor/newAttendance'), async(req,res) => {});
 router.post('/mentor/assign/:classes', authenticateToken, isMentor, require('../controller/mentor/assignStudent'), async(req,res)=>{});
 
 
