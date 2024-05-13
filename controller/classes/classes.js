@@ -13,7 +13,7 @@ const classes = async (req, res) => {
         console.log(email);
     } catch (error) {
         console.log(error);
-        res.status(500);
+        res.status(500).json('Error: ' + error);
     }
 }
 
