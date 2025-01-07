@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 require('dotenv').config();
 const index = require('./routes/index');
+const frontend = require('./routes/frontend');
 
 const port = process.env.PORT;
 
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 
 // USE ROUTES
 app.use(index);
+app.use(frontend);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);

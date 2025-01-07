@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/tailwind.css">
+  <title>Register</title>
+  <style>
+    input {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <section class="w-auto h-screen flex flex-col justify-center items-center">
+    <h1 class="text-2xl font-bold mb-4">Daftar</h1>
+    <form id="registerForm" class="w-[20rem] flex flex-col items-start">
+      <label for="name">Nama Lengkap</label>
+      <input type="text" name="name" id="name" class="border border-gray-400 p-1 rounded-md mb-2">
+      <label for="phonenumber">No. Telpon</label>
+      <input type="text" name="phonenumber" id="phonenumber" class="border border-gray-400 p-1 rounded-md mb-2">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" class="border border-gray-400 p-1 rounded-md mb-2">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" class="border border-gray-400 p-1 rounded-md mb-2">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" name="confirmPassword" id="confirmPassword" class="border border-gray-400 p-1 rounded-md mb-2">
+      <button type="submit" class="bg-blue-500 text-white p-2 px-10 rounded-md">Register</button>
+    </form>
+  </section>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Get form data
+      const formData = new FormData(this);
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      console.log('Form Data:', data);
+
+      fetch('/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(result => {
+        if(result.status === 'success') {
+          alert('Registration successful!');
+          window.location.href = '/login';
+        } else {
+          alert('Registration failed!');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+  </script>
+</body>
+</html>

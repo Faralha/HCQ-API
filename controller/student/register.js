@@ -11,9 +11,13 @@ let register = async (req, res) => {
     }
   }
 
-  const { email, name, password, city, address, phonenumber } = sanitizedBody;
-
   try {
+    // SANITIZE + INPUT CHECK
+    const { email, name, password, city, address, phonenumber } = sanitizedBody;
+    if (!email || !name || !password || !phonenumber) {
+      return res.status(400).send({ message: 'Data tidak lengkap.' });
+    }
+
     // BCRYPT PASSWORD HASH
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -29,7 +33,10 @@ let register = async (req, res) => {
       [email],
     );
     if (similar.length > 0) {
-      return res.status(400).send({ message: 'Email sudah dipakai.' });
+        return res.status(400).send({
+            status: 'failed',
+            message: 'Email sudah dipakai.'
+        });
     }
 
     // SUFFIX NUMBER AUTO INCREMENT
@@ -64,7 +71,10 @@ let register = async (req, res) => {
       ],
     );
 
-    res.status(200).json({ message: 'Akun Berhasil Dibuat!' });
+    res.status(200).json({
+      status: 'success',
+      message: 'Akun Berhasil Dibuat!',
+    });
   } catch (error) {
     res.status(500);
     console.log(error);
