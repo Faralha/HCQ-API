@@ -8,6 +8,9 @@ const index = require('./routes/index');
 
 const port = process.env.PORT;
 
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
 app.use(bodyParser.json());
 app.use(cookieParser())
 app.use(cors({

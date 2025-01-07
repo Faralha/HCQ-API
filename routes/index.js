@@ -7,7 +7,10 @@ const {authenticateToken} = require('../middleware/token')
 
 // AUTHENTICATION ROUTES
 router.get('/', (req, res) => {
-    res.send({message: "This is HCQ REST API. You shouldn't access it directly."});
+    res.render('main', {
+        title: "Welcome to the API",
+        page: 'pages/home'
+    });
 });
 router.post('/register', require('../controller/student/register.js'), (req, res) => {});
 router.post('/login', require('../controller/student/login.js'), async (req, res) => {});
