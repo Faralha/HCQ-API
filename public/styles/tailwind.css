@@ -628,16 +628,8 @@ video {
   width: 20rem;
 }
 
-.w-auto {
-  width: auto;
-}
-
 .w-full {
   width: 100%;
-}
-
-.w-\[10rem\] {
-  width: 10rem;
 }
 
 .max-w-xs {

@@ -1,6 +1,6 @@
 const db = require('../../db');
 const bcrypt = require('bcrypt');
-const { generateAccessToken } = require('../../middleware/token');
+
 const sanitizeInput = require('../../function/sanitizeInput');
 
 let login = async (req, res) => {

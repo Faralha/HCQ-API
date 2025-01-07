@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/tailwind.css">
+  <title>Register</title>
+  <style>
+    input {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <%- include('components/alert') %>
+  <section class="w-full h-screen flex flex-col justify-center items-center">
+    <div class="w-[20rem] mb-4">
+      <h1 class="text-2xl font-bold">Daftar</h1>
+      <p><%= title %></p>
+    </div>
+    <form id="registerForm" class="w-[20rem] flex flex-col items-start">
+      <label for="token">Token</label>
+      <input type="text" name="token" id="token" class="border border-gray-400 p-1 rounded-md mb-2" required>
+      <label for="name">Nama Lengkap</label>
+      <input type="text" name="name" id="name" class="border border-gray-400 p-1 rounded-md mb-2" required>
+      <label for="phonenumber">No. Telpon</label>
+      <input type="text" name="phonenumber" id="phonenumber" class="border border-gray-400 p-1 rounded-md mb-2" required>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" class="border border-gray-400 p-1 rounded-md mb-2" required>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" class="border border-gray-400 p-1 rounded-md mb-2" required>
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" name="confirmPassword" id="confirmPassword" class="border border-gray-400 p-1 rounded-md mb-2" required>
+      <button type="submit" class="bg-blue-500 text-white p-2 px-10 rounded-md w-full">Register</button>
+    </form>
+    <div class="w-full flex justify-center mt-4 gap-4">
+        <a href="/admin/login">login</a>
+      </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('registerForm');
+
+      // Retrieve Localstorage
+      const savedData = JSON.parse(localStorage.getItem('registerFormData'));
+      if (savedData) {
+        Object.keys(savedData).forEach(key => {
+          const input = form.elements[key];
+          if (input) {
+            input.value = savedData[key];
+          }
+        });
+      }
+
+      // Localstorage for cache
+      form.addEventListener('input', function(event) {
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+        localStorage.setItem('registerFormData', JSON.stringify(data));
+      });
+
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+
+        // Input validation
+        if (!data.name || !data.phonenumber || !data.email || !data.password || !data.confirmPassword || !data.token) {
+          showAlert('All fields are required.', 'failed');
+          return;
+        }
+
+        if (data.password !== data.confirmPassword) {
+          showAlert('Passwords do not match.', 'failed');
+          return;
+        }
+
+        console.log('Form Data:', data);
+
+        fetch('/admin/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.status === 'success') {
+            showAlert(result.message, 'success');
+            localStorage.removeItem('registerFormData'); // Clear saved data on success
+            window.location.href = '/login';
+          } else {
+            showAlert(result.message, 'failed');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showAlert('An error occurred. Please try again.', 'failed');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -10,8 +10,8 @@ router.post('/register', require('../controller/student/register.js'), (req, res
 router.post('/login', require('../controller/student/login.js'), async (req, res) => {});
 router.post('/mentor/register', require('../controller/mentor/mentorRegister.js'), async(req, res) => {});
 router.post('/mentor/login', require('../controller/mentor/mentorLogin'), async (req, res) =>{});
-router.post('/admin/register', require('../controller/admin/adminRegister'), async (req, res)=>{});
-router.post('/admin/login', require('../controller/admin/admin-login.js'), async (req, res) => {});
+router.post('/admin/register', require('../controller/admin/auth/adminRegister.js'), async (req, res)=>{});
+router.post('/admin/login', require('../controller/admin/auth/adminLogin.js'), async (req, res) => {});
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) return res.status(500).send("Error logging out");

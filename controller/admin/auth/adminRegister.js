@@ -1,5 +1,5 @@
-const db = require('../../db');
-const sanitizeInput = require('../../function/sanitizeInput');
+const db = require('../../../db');
+const sanitizeInput = require('../../../function/sanitizeInput');
 const bcrypt = require('bcrypt');
 
 const adminRegister = async (req, res) => {
@@ -17,14 +17,14 @@ const adminRegister = async (req, res) => {
 
     // VERIFY TOKEN
     if (!token) {
-      res.status(401).json({ alert: 'Invalid Token.' });
+      res.status(401).json({ message: 'Invalid Token.' });
     }
     const [verifyToken] = await db.execute(
       'SELECT token FROM token WHERE token = ? AND email = ?',
       [token, email],
     );
     if (verifyToken.length <= 0) {
-      return res.status(401).json({ alert: 'Invalid Token.' });
+      return res.status(401).json({ message: 'Invalid Token.' });
     }
 
     // DELETE USED TOKEN
@@ -52,7 +52,7 @@ const adminRegister = async (req, res) => {
     // INSERT
     const newId = role + '-' + lastId;
     await db.execute(
-      'INSERT INTO admin (id, name, email, password, city, address, phonenumber) VALUES (?,?,?,?,?,?,?)',
+      'INSERT INTO admin (id, name, email, password, city, address, phone_number) VALUES (?,?,?,?,?,?,?)',
       [
         newId,
         name,
@@ -65,6 +65,7 @@ const adminRegister = async (req, res) => {
     );
 
     res.json({
+      status: 'success',
       message: 'Admin Account Created! Please Login.',
     });
   } catch (error) {

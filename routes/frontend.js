@@ -21,6 +21,20 @@ router.get('/mentor/login', (req, res) => {
   res.render('login', { link: '/mentor/login', title: 'Masuk sebagai Mentor' });
 });
 
+// ADMIN
+router.get('/admin/register', (req, res) => {
+  res.render('adminRegister', {
+    link: '/admin/register',
+    title: 'Daftar sebagai Admin',
+  });
+});
+router.get('/admin/login', (req, res) => {
+  res.render('adminLogin', {
+    link: '/admin/login',
+    title: 'Masuk sebagai Admin',
+  });
+});
+
 router.get('/', authenticateToken, (req, res) => {
   res.render('main', {
     title: 'Welcome to the API',
