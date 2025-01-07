@@ -17,4 +17,12 @@ router.get('/login', (req, res) => {
   });
 });
 
+router.get('/class', (req, res) => {
+  res.render('main', {
+    page: 'pages/mentor/class',
+    title: 'Class Management',
+    user: req.session.user || {},
+  });
+});
+
 module.exports = router;

@@ -1,1 +1,128 @@
-<h1 class="text-3xl font-bold tracking-tight">Class Management</h1>
+<h1 class="text-3xl font-bold tracking-tight">Subclass Management</h1>
+
+<!-- CREATE CLASS -->
+<section>
+  <h2 class="text-xl font-semibold mt-4">Create Class</h2>
+  <p class="opacity-70">Buat jenis kelas seperti Tahsin, tahfidz, dll</p>
+  <form id="createClassForm" class="w-full flex flex-col items-start">
+    <div class="flex w-full items-center gap-2 mb-2 mt-2">
+      <div class="flex flex-col w-full">
+        <label for="jenis">Name</label>
+        <input type="text" name="jenis" id="jenis" class="w-full border border-gray-400 p-1 rounded-md" required>
+      </div>
+      <div class="flex flex-col w-full">
+        <label for="keterangan">Description</label>
+        <input type="text" name="keterangan" id="keterangan" class="w-full border border-gray-400 p-1 rounded-md" />
+      </div>
+    </div>
+  <input type="hidden" name="email" value="<%= user.email %>">
+  <button type="submit" class="bg-blue-500 text-white p-2 px-10 rounded-md w-full">Create</button>
+  </form>
+</section>
+
+<!-- LIST OF CLASS -->
+<section>
+  <h2 class="text-xl font-semibold mt-4">List of Class</h2>
+  <p class="opacity-70">Daftar jenis kelas yang sudah dibuat</p>
+  <div class="border w-full flex flex-col items-start gap-2 mt-2">
+    <div class="w-full flex justify-between items-center bg-gray-100 p-2 rounded-md">
+      <p class="w-1/4">Name</p>
+      <p class="w-1/2">Description</p>
+      <p class="w-1/4">Created By</p>
+      <p class="w-1/6">Action</p>
+    </div>
+    <div id="classList" class="w-full flex flex-col items-start gap-2"></div>
+  </div>
+</section>
+
+<!-- FETCH CLASS -->
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+  const classList = document.getElementById('classList');
+  const createClassForm = document.getElementById('createClassForm');
+
+  createClassForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    if (!data.jenis) {
+      showAlert('All fields are required.', 'failed');
+      return;
+    }
+
+    fetch('/api/v1/admin/class', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          showAlert('Class created successfully.', 'success');
+          this.reset();
+          fetchClass();
+        } else {
+          showAlert(result.message, 'failed');
+        }
+      })
+      .catch(error => {
+        showAlert('Failed to create class.', 'failed');
+      });
+  });
+
+  function deleteClass(id) {
+    console.log(id);
+    fetch(`/api/v1/admin/class/${id}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          showAlert(result.message, 'success');
+          fetchClass();
+        } else {
+          showAlert(result.message, 'failed');
+        }
+      })
+      .catch(error => {
+        showAlert('Failed to delete class.', 'failed');
+      });
+  }
+
+  function fetchClass() {
+    fetch('/api/v1/admin/class')
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          classList.innerHTML = '';
+          result.data.forEach(item => {
+            const div = document.createElement('div');
+            div.classList.add('w-full', 'flex', 'justify-between', 'items-center', 'p-2', 'rounded-md', 'bg-white');
+            div.innerHTML = `
+              <p class="w-1/4">${item.jenis}</p>
+              <p class="w-1/2">${item.keterangan}</p>
+              <p class="w-1/4">${item.created_by}</p>
+              <button class="w-1/6 bg-red-500 text-white p-1 rounded-md" onclick="deleteClass('${item.jenis}')">Delete</button>
+            `;
+            classList.appendChild(div);
+          });
+        } else {
+          showAlert(result.message, 'failed');
+        }
+      })
+      .catch(error => {
+        showAlert('Failed to fetch class.', 'failed');
+      });
+  }
+
+  fetchClass();
+  window.deleteClass = deleteClass;
+  })
+</script>

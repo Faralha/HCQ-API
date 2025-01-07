@@ -35,6 +35,12 @@ router.get('/mentor', isAdmin, async (req, res) => {
   }
 });
 
-router.post('/mentor/verify', verifyMentor);
+router.get('/class', isAdmin, async (req, res) => {
+  res.render('main', {
+    page: 'pages/admin/class',
+    title: 'Subclass Management',
+    user: req.session.user || {},
+  });
+});
 
 module.exports = router;
