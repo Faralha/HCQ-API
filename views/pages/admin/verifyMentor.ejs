@@ -1,0 +1,23 @@
+<section class="mt-5">
+  <h1 class="text-3xl tracking-tight font-bold mb-3">Verify Mentor</h1>
+  <table class="min-w-full bg-white border">
+    <thead>
+      <tr>
+        <th class="py-2 px-4 border-b border-gray-200 bg-gray-100">ID</th>
+        <th class="py-2 px-4 border-b border-gray-200 bg-gray-100">Name</th>
+        <th class="py-2 px-4 border-b border-gray-200 bg-gray-100">Email</th>
+        <th class="py-2 px-4 border-b border-gray-200 bg-gray-100">Verified</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% mentors.forEach(mentor => { %>
+        <tr>
+          <td class="py-2 px-4 border-b border-gray-200"><%= mentor.id %></td>
+          <td class="py-2 px-4 border-b border-gray-200"><%= mentor.name %></td>
+          <td class="py-2 px-4 border-b border-gray-200"><%= mentor.email %></td>
+          <td class="py-2 px-4 border-b border-gray-200"><%= mentor.is_verified ? 'Yes' : 'No' %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</section>

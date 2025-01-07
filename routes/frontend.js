@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/token');
+const { getMentorDirect } = require('../controller/admin/mentor/getMentor');
+
 
 // STUDENT
 router.get('/register', (req, res) => {
@@ -22,6 +24,7 @@ router.get('/mentor/login', (req, res) => {
 });
 
 // ADMIN
+// AUTH
 router.get('/admin/register', (req, res) => {
   res.render('adminRegister', {
     link: '/admin/register',
@@ -33,6 +36,22 @@ router.get('/admin/login', (req, res) => {
     link: '/admin/login',
     title: 'Masuk sebagai Admin',
   });
+});
+// MENTOR VERIFICATION
+router.get('/admin/mentor', async (req, res) => {
+  try {
+    const mentors = await getMentorDirect();
+    res.render('main', {
+      page: 'pages/admin/verifyMentor',
+      link: '/admin/mentor/verify',
+      title: 'Verifikasi Mentor',
+      mentors: mentors,
+      user: req.session.user || {},
+    });
+  } catch (error) {
+    res.status(500);
+    console.log(error);
+  }
 });
 
 router.get('/', authenticateToken, (req, res) => {

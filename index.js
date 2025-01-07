@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 const session = require('express-session');
 
 require('dotenv').config();
-const index = require('./routes/index');
+const apiV1 = require('./routes/api/v1');
 const frontend = require('./routes/frontend');
 
 const port = process.env.PORT;
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 // USE ROUTES
-app.use(index);
+app.use('/api/v1/', apiV1);
 app.use(frontend);
 
 app.listen(port, () => {
