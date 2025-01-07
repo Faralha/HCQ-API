@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken } = require('../middleware/token');
-const { getMentorDirect } = require('../controller/admin/mentor/getMentor');
+const { isAdmin } = require('../middleware/isAdmin');
 
 // STUDENT
 router.get('/register', (req, res) => {
@@ -50,14 +50,12 @@ router.get('/admin/login', (req, res) => {
   });
 });
 // MENTOR VERIFICATION
-router.get('/admin/mentor', async (req, res) => {
+router.get('/admin/mentor', isAdmin, async (req, res) => {
   try {
-    const mentors = await getMentorDirect();
     res.render('main', {
       page: 'pages/admin/verifyMentor',
       link: '/admin/mentor/verify',
       title: 'Verifikasi Mentor',
-      mentors: mentors,
       user: req.session.user || {},
     });
   } catch (error) {

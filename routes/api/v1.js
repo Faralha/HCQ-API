@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const isAdmin = require('../../middleware/isAdmin');
+const {isAdmin} = require('../../middleware/isAdmin');
 const isMentor = require('../../middleware/isMentor');
 const {authenticateToken} = require('../../middleware/token')
 
@@ -29,6 +29,7 @@ router.get('/student/class', authenticateToken, require('../../controller/studen
 router.get('/checkAuth', authenticateToken, require('../../controller/checkAuth'), async(req, res)=>{});
 
 // ADMIN ONLY ROUTES
+router.get('/mentors', authenticateToken, isAdmin, require('../../controller/admin/mentor/getMentor'), async (req, res) => { });
 router.post('/admin/mentor/verify', authenticateToken, isAdmin, require('../../controller/admin/mentor/verifyMentor'), async (req, res) => {});
 router.post('/admin/subclass', authenticateToken, isAdmin, require('../../controller/admin/createSubclass'), async (req, res) => {})
 router.post('/admin/semester/create', authenticateToken, isAdmin, require('../../controller/admin/createSemester'), async(req, res) => {});

@@ -3,6 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.container {
+.container-custom {
   @apply xl:px-32 lg:px-24 md:px-16 sm:px-10 px-5;
 }
