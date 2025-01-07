@@ -7,8 +7,13 @@
   <title>Document</title>
 </head>
 <body>
-  <main class="">
+  <main class="container">
     <%- include(page) %>
+    <p><%= user.email %></p>
+    <p><%= user.role %></p>
+    <form action="/logout" method="get"">
+      <button type="submit">Logout</button>
+    </form>
   </main>
 </body>
 </html>

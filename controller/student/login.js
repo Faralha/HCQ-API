@@ -63,6 +63,11 @@ let login = async (req, res) => {
     //   sameSite: 'Lax',
     // });
 
+    req.session.user = {
+      email: email,
+      role: role,
+    };
+
     res.status(200).json({
       status: 'success',
       message: 'Authenticated.',

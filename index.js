@@ -3,6 +3,8 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+const session = require('express-session');
+
 require('dotenv').config();
 const index = require('./routes/index');
 const frontend = require('./routes/frontend');
@@ -13,6 +15,15 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 
 app.use(express.static('public'));
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET, // Use a secret from your environment variables
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set to true if using HTTPS
+  }),
+);
 
 app.use(bodyParser.json());
 app.use(cookieParser());

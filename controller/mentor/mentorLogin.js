@@ -15,6 +15,11 @@ const mentorLogin = async (req, res) => {
     }
 
     const { email, password } = sanitizedBody;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ status: 'failed', message: 'Data tidak lengkap.' });
+    }
 
     // VERIFY PASSWORD
     const [emailPass] = await db.execute(
@@ -23,18 +28,18 @@ const mentorLogin = async (req, res) => {
     );
     const passwordMatch = await bcrypt.compare(password, emailPass[0].password);
     if (!passwordMatch) {
-      return res.status(401);
+      return res
+        .status(400)
+        .json({ status: 'failed', message: 'Password Salah.' });
     }
 
     const role = 'mentor';
-    const token = generateAccessToken({ email, role });
-    res.cookie('api-auth', token, {
-      expire: 360000 + Date.now(),
-      httpOnly: true,
-      secure: true,
-    });
+    req.session.user = {
+      email: email,
+      role: role,
+    };
 
-    res.status(200).json({ message: 'Authenticated.' });
+    res.json({ status: 'success', message: 'Authenticated.' });
   } catch (error) {
     res.status(500);
   }

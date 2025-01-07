@@ -25,7 +25,7 @@ let mentorRegister = async (req, res) => {
       email,
     ]);
     if (similar.length > 0) {
-      return res.json({ message: 'Email has been used!' });
+      return res.json({ status: 'failed', message: 'Email has been used!' });
     }
 
     // ID HANDLER
@@ -45,7 +45,7 @@ let mentorRegister = async (req, res) => {
     const role = 'M';
     const newId = role + semester + '-' + id.toString().padStart(4, '0');
     await db.execute(
-      'INSERT INTO mentor (id, name, email, password, phonenumber, city, address) VALUES (?,?,?,?,?,?,?)',
+      'INSERT INTO mentor (id, name, email, password, phone_number, city, address) VALUES (?,?,?,?,?,?,?)',
       [
         newId,
         name,
@@ -57,7 +57,8 @@ let mentorRegister = async (req, res) => {
       ],
     );
 
-    res.json({
+    res.status(200).json({
+      status: 'success',
       message:
         'Mentor Account has been created! Wait for verification by Admin.',
     });

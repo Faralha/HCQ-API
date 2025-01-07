@@ -21,6 +21,7 @@ DB_PASSWORD = your_db_password
 DB_DATABASE = your_database_name
 
 TOKEN_SECRET = anything_that_is_hard_to_guess
+SESSION_SECRET = another_hard_guessed_word_or_sentence
 ```
 
 

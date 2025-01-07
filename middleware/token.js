@@ -13,26 +13,10 @@ const verifyToken = (token, callback, res) => {
 };
 
 const authenticateToken = async (req, res, next) => {
-  if (process.env.DEV_MODE === 'true') {
-    next();
+  if (req.session && req.session.user) {
+    return next();
   } else {
-    require('dotenv').config();
-    const cookieName = process.env.COOKIE_NAME;
-    const bearerHeader = await req.cookies[cookieName];
-    console.log(bearerHeader);
-
-    if (bearerHeader !== 'undefined') {
-      verifyToken(bearerHeader, (err, authData) => {
-        if (err) {
-          res.status(403).json({ message: err }); // Unauthorized
-        } else {
-          req.authData = authData;
-          next(); // Lanjut ke handler berikutnya
-        }
-      });
-    } else {
-      res.status(403).json({ message: 'error' }); // Unauthorized
-    }
+    return res.redirect('/login');
   }
 };
 
