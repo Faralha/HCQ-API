@@ -1,68 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const studentRoutes = require('./frontend/student');
+const mentorRoutes = require('./frontend/mentor');
+const adminRoutes = require('./frontend/admin');
 const { authenticateToken } = require('../middleware/token');
-const { isAdmin } = require('../middleware/isAdmin');
 
-// STUDENT
-router.get('/register', (req, res) => {
-  res.render('register', {
-    apiLink: '/api/v1/register',
-    title: 'Daftar sebagai Siswa',
-    link: '/register',
-  });
-});
-router.get('/login', (req, res) => {
-  res.render('login', {
-    apiLink: '/api/v1/login',
-    title: 'Masuk sebagai Siswa',
-    link: '/login',
-  });
-});
-
-// MENTOR
-router.get('/mentor/register', (req, res) => {
-  res.render('register', {
-    apiLink: '/api/v1/mentor/register',
-    title: 'Daftar sebagai Mentor',
-    link: '/mentor/register',
-  });
-});
-router.get('/mentor/login', (req, res) => {
-  res.render('login', {
-    apiLink: '/api/v1/mentor/login',
-    title: 'Masuk sebagai Mentor',
-    link: '/mentor/login',
-  });
-});
-
-// ADMIN
-// AUTH
-router.get('/admin/register', (req, res) => {
-  res.render('adminRegister', {
-    link: '/api/v1/admin/register',
-    title: 'Daftar sebagai Admin',
-  });
-});
-router.get('/admin/login', (req, res) => {
-  res.render('adminLogin', {
-    link: '/api/v1/admin/login',
-    title: 'Masuk sebagai Admin',
-  });
-});
-// MENTOR VERIFICATION
-router.get('/admin/mentor', isAdmin, async (req, res) => {
-  try {
-    res.render('main', {
-      page: 'pages/admin/verifyMentor',
-      link: '/admin/mentor/verify',
-      title: 'Verifikasi Mentor',
-      user: req.session.user || {},
-    });
-  } catch (error) {
-    res.status(500);
-    console.log(error);
-  }
-});
+router.use(studentRoutes);
+router.use('/mentor', mentorRoutes);
+router.use('/admin', adminRoutes);
 
 router.get('/', authenticateToken, (req, res) => {
   res.render('main', {
