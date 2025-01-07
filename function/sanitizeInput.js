@@ -1,5 +1,5 @@
 function sanitizeInput(input) {
-    return input.replace(/<[^>]*>?/gm, '');
+  return input.replace(/<[^>]*>?/gm, '');
 }
 
 module.exports = sanitizeInput;

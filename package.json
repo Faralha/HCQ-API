@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"npm:watch:css\" \"nodemon index.js\"",
     "build:css": "postcss src/styles/tailwind.css -o public/styles/tailwind.css",
-    "watch:css": "npx tailwindcss -i src/styles/tailwind.css -o public/styles/tailwind.css --watch"
+    "watch:css": "npx tailwindcss -i src/styles/tailwind.css -o public/styles/tailwind.css --watch",
+    "prettier": "prettier --write \"**/*.{js,json,css,html,ejs}\""
   },
   "keywords": [],
   "author": "",
@@ -30,6 +31,7 @@
     "chai": "^5.1.0",
     "mocha": "^10.3.0",
     "postcss": "^8.4.49",
-    "postcss-cli": "^11.0.0"
+    "postcss-cli": "^11.0.0",
+    "prettier": "^3.4.2"
   }
 }

@@ -14,20 +14,21 @@ app.set('views', './views');
 app.use(express.static('public'));
 
 app.use(bodyParser.json());
-app.use(cookieParser())
-app.use(cors({
-    credentials: true
-}));
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+  }),
+);
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
 });
 
-
 // USE ROUTES
-app.use(index)
+app.use(index);
 
 app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-})
+  console.log(`Listening on port ${port}`);
+});
