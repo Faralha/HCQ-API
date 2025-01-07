@@ -32,9 +32,9 @@
       <button type="submit" class="bg-blue-500 text-white p-2 px-10 rounded-md w-full">Register</button>
     </form>
     <div class="w-full flex justify-center mt-4 gap-4">
-        <a href="/login">login</a>
-        <a href="<% if (link == '/register') {%> /mentor/register <%} else { %> /mentor/register <%} %>">
-          <% if (link == '/register') {%> Register sebagai mentor <%} else { %> Register Sebagai Murid <%} %>
+        <a href="/login">Login</a>
+        <a href="<% if (link == '/register') {%> /mentor/register <%} else { %> /register <%} %>">
+          <% if (link == '/register') {%> Register sebagai Mentor <%} else { %> Register Sebagai Murid <%} %>
         </a>
       </div>
   </section>
@@ -86,7 +86,7 @@
 
         console.log('Form Data:', data);
 
-        const postLink = "<%= link %>";
+        const postLink = "<%= apiLink %>";
         fetch(postLink, {
           method: 'POST',
           headers: {

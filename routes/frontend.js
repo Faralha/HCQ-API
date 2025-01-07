@@ -3,37 +3,49 @@ const router = express.Router();
 const { authenticateToken } = require('../middleware/token');
 const { getMentorDirect } = require('../controller/admin/mentor/getMentor');
 
-
 // STUDENT
 router.get('/register', (req, res) => {
-  res.render('register', { link: '/register', title: 'Daftar sebagai Siswa' });
+  res.render('register', {
+    apiLink: '/api/v1/register',
+    title: 'Daftar sebagai Siswa',
+    link: '/register',
+  });
 });
 router.get('/login', (req, res) => {
-  res.render('login', { link: '/login', title: 'Masuk sebagai Siswa' });
+  res.render('login', {
+    apiLink: '/api/v1/login',
+    title: 'Masuk sebagai Siswa',
+    link: '/login',
+  });
 });
 
 // MENTOR
 router.get('/mentor/register', (req, res) => {
   res.render('register', {
-    link: '/mentor/register',
+    apiLink: '/api/v1/mentor/register',
     title: 'Daftar sebagai Mentor',
+    link: '/mentor/register',
   });
 });
 router.get('/mentor/login', (req, res) => {
-  res.render('login', { link: '/mentor/login', title: 'Masuk sebagai Mentor' });
+  res.render('login', {
+    apiLink: '/api/v1/mentor/login',
+    title: 'Masuk sebagai Mentor',
+    link: '/mentor/login',
+  });
 });
 
 // ADMIN
 // AUTH
 router.get('/admin/register', (req, res) => {
   res.render('adminRegister', {
-    link: '/admin/register',
+    link: '/api/v1/admin/register',
     title: 'Daftar sebagai Admin',
   });
 });
 router.get('/admin/login', (req, res) => {
   res.render('adminLogin', {
-    link: '/admin/login',
+    link: '/api/v1/admin/login',
     title: 'Masuk sebagai Admin',
   });
 });

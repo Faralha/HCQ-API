@@ -1,7 +1,7 @@
 <header class="flex justify-start gap-4 p-4 bg-zinc-700 text-white">
   <p>Email: <%= user.email %></p>
   <p>Role: <%= user.role %></p>
-  <form action="/logout" method="get"">
+  <form action="/api/v1/logout" method="get">
     <button type="submit">Logout</button>
   </form>
 </header>

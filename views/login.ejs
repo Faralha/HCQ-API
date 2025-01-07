@@ -29,7 +29,7 @@
       
       <div class="w-full flex justify-center mt-4 gap-4">
         <a href="/register">Register</a>
-        <a href="<% if (link == '/login') {%> /mentor/login <%} else { %> /mentor/login <%} %>">
+        <a href="<% if (link == '/login') {%> /mentor/login <%} else { %> /login <%} %>">
           <% if (link == '/login') {%> Login sebagai mentor <%} else { %> Login Sebagai Murid <%} %>
         </a>
       </div>
@@ -76,7 +76,7 @@
           return;
         }
 
-        const postLink = "<%= link %>";
+        const postLink = "<%= apiLink %>";
         fetch(postLink, {
           method: 'POST',
           headers: {
