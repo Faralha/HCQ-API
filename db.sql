@@ -1,3 +1,5 @@
+CREATE DATABASE hcq;
+USE hcq;
 -- ADMINISTRATIVE TABLES
 CREATE TABLE token (
 	token VARCHAR(64) NOT NULL,
@@ -6,12 +8,12 @@ CREATE TABLE token (
 );
 CREATE TABLE student (
 	id VARCHAR(10) NOT NULL,
-    name VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
 	password VARCHAR(255) NOT NULL,
 	city VARCHAR(30),
 	address VARCHAR(255),
-	phonenumber VARCHAR(255) NOT NULL,
+	phone_number VARCHAR(20) NOT NULL,
 	UNIQUE KEY index1 (id) USING BTREE,
 	PRIMARY KEY (id)
 );
@@ -22,7 +24,7 @@ CREATE TABLE admin (
 	password VARCHAR(255) NOT NULL,
 	city VARCHAR(30),
 	address VARCHAR(255),
-	phonenumber VARCHAR(255) NOT NULL,
+	phone_number VARCHAR(20) NOT NULL,
 	PRIMARY KEY (id)
 );
 CREATE TABLE mentor (
@@ -30,18 +32,18 @@ CREATE TABLE mentor (
 	name VARCHAR(255) NOT NULL,
 	password VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
-	phonenumber VARCHAR(255) NOT NULL,
+	phone_number VARCHAR(20) NOT NULL,
 	city VARCHAR(30),
 	address VARCHAR(255),
-	isVerified BOOLEAN NOT NULL DEFAULT 0,
+	is_verified BOOLEAN NOT NULL DEFAULT 0,
 	PRIMARY KEY (id)
 );
 
 -- CLASS
-CREATE TABLE JENIS (
+CREATE TABLE jenis (
 	jenis VARCHAR(255) NOT NULL,
 	keterangan VARCHAR(255),
-	createdBy VARCHAR(255) NOT NULL,
+	created_by VARCHAR(255) NOT NULL,
 	PRIMARY KEY (jenis)
 );
 CREATE TABLE semester (
@@ -88,3 +90,13 @@ CREATE TABLE grade_class (
 	FOREIGN KEY (id_grade) REFERENCES grade(id),
 	FOREIGN KEY (id_student) REFERENCES student(id)
 );
+
+CREATE INDEX idx_student_id ON student(id);
+CREATE INDEX idx_student_class_id_class ON student_class(id_class);
+CREATE INDEX idx_student_class_id_student ON student_class(id_student);
+CREATE INDEX idx_grade_id_student ON grade(id_student);
+CREATE INDEX idx_grade_id_class ON grade(id_class);
+CREATE INDEX idx_attendance_id_class ON attendance(id_class);
+CREATE INDEX idx_attendance_id_student ON attendance(id_student);
+CREATE INDEX idx_grade_class_id_grade ON grade_class(id_grade);
+CREATE INDEX idx_grade_class_id_student ON grade_class(id_student);
