@@ -33,10 +33,10 @@ let register = async (req, res) => {
       [email],
     );
     if (similar.length > 0) {
-        return res.status(400).send({
-            status: 'failed',
-            message: 'Email sudah dipakai.'
-        });
+      return res.status(400).send({
+        status: 'failed',
+        message: 'Email sudah dipakai.',
+      });
     }
 
     // SUFFIX NUMBER AUTO INCREMENT

@@ -13,16 +13,26 @@ let login = async (req, res) => {
     }
   }
 
-  const { email, password } = sanitizedBody;
-
   try {
+    // INPUT VALIDATION
+    const { email, password } = sanitizedBody;
+    if (!email || !password) {
+      return res.status(400).json({
+        status: 'failed',
+        message: 'Data tidak lengkap.',
+      });
+    }
+
     // CHECK IF THERE IS ANY EMAIL REGISTERED
     const checkEmail = await db.execute(
       'SELECT email FROM student WHERE email = ?',
       [email],
     );
     if (checkEmail.length <= 0) {
-      return res.status(401).json({ error: 'Access Forbidden.' });
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access Forbidden.',
+      });
     }
 
     // CHECK IF PASSWORD MATCH
@@ -33,24 +43,30 @@ let login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, emailPass[0].password);
 
     if (!passwordMatch) {
-      return res.status(401).json({ error: 'Access Forbidden.' });
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Access Forbidden.',
+      });
     }
 
     // ROLE - by default role will be student
     const role = 'student';
 
-    require('dotenv').config();
-    const cookieName = process.env.COOKIE_NAME;
+    // require('dotenv').config();
+    // const cookieName = process.env.COOKIE_NAME;
 
-    const token = generateAccessToken({ email, role });
-    res.cookie(cookieName, token, {
-      expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Lax',
+    // const token = generateAccessToken({ email, role });
+    // res.cookie(cookieName, token, {
+    //   expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
+    //   httpOnly: true,
+    //   secure: true,
+    //   sameSite: 'Lax',
+    // });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Authenticated.',
     });
-
-    res.json({ message: 'Authenticated.' });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: 'Internal Server Error!' });

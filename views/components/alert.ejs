@@ -1,0 +1,44 @@
+<div id="alert-container" class="fixed top-4 right-4 space-y-4 max-w-xs w-full"></div>
+
+<script>
+  function showAlert(message, mode) {
+    const alertContainer = document.getElementById('alert-container');
+
+    // Create a new alert element
+    const alert = document.createElement('div');
+    alert.className = 'rounded-md shadow-lg transition-transform transform translate-x-full opacity-0';
+    alert.innerHTML = `
+      <div class="flex items-center">
+        <span class="ml-2 p-4">${message}</span>
+      </div>
+    `;
+
+    // Set the mode (success or failed)
+    const alertContent = alert.querySelector('div');
+    if (mode === 'success') {
+      alertContent.classList.add('bg-green-500', 'text-white');
+    } else if (mode === 'failed') {
+      alertContent.classList.add('bg-red-500', 'text-white');
+    }
+
+    // Add the alert to the container
+    alertContainer.appendChild(alert);
+
+    // Show the alert with sliding animation
+    setTimeout(() => {
+      alert.classList.remove('translate-x-full', 'opacity-0');
+      alert.classList.add('translate-x-0', 'opacity-100');
+    }, 100); // Slight delay to trigger the transition
+
+    // Hide the alert after 5 seconds with sliding out animation
+    setTimeout(() => {
+      alert.classList.remove('translate-x-0', 'opacity-100');
+      alert.classList.add('translate-x-full', 'opacity-0');
+      // Remove the alert from the DOM after the transition
+      setTimeout(() => {
+        
+        alertContainer.removeChild(alert);
+      }, 500); // Match the transition duration
+    }, 5000);
+  }
+</script>

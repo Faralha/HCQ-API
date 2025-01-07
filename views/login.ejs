@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/styles/tailwind.css">
+  <title>Login</title>
+  <style>
+    input {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <%- include('components/alert') %>
+  <section class="w-auto h-screen flex flex-col justify-center items-center">
+    <h1 class="text-2xl font-bold mb-4">Masuk</h1>
+    <form id="registerForm" class="w-[20rem] flex flex-col items-start">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" class="border border-gray-400 p-1 rounded-md mb-2" required>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" class="border border-gray-400 p-1 rounded-md mb-2" required>
+      <button type="submit" class="bg-blue-500 text-white p-2 px-10 rounded-md">Register</button>
+    </form>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('registerForm');
+
+      // Retrieve Localstorage
+      const savedData = JSON.parse(localStorage.getItem('registerFormData'));
+      if (savedData) {
+        Object.keys(savedData).forEach(key => {
+          const input = form.elements[key];
+          if (input) {
+            input.value = savedData[key];
+          }
+        });
+      }
+
+      // Localstorage for cache
+      form.addEventListener('input', function(event) {
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+        localStorage.setItem('registerFormData', JSON.stringify(data));
+      });
+
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+
+        // Input validation
+        if ( !data.email || !data.password ) {
+          showAlert('All fields are required.', 'failed');
+          return;
+        }
+
+        fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.status === 'success') {
+            showAlert(result.message, 'success');
+            localStorage.removeItem('registerFormData'); // Clear saved data on success
+            window.location.href = '/';
+          } else {
+            showAlert(result.message, 'failed');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showAlert('An error occurred. Please try again.', 'failed');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
