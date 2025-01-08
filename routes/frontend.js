@@ -8,8 +8,8 @@ const { authenticateToken } = require('../middleware/token');
 const { isAdmin } = require('../middleware/isAdmin');
 const isMentor = require('../middleware/isMentor');
 
-router.use(studentRoutes);
 router.use(authRoutes);
+router.use(authenticateToken, studentRoutes);
 router.use('/mentor', isMentor, mentorRoutes);
 router.use('/admin', isAdmin, adminRoutes);
 

@@ -7,7 +7,13 @@
   <title>Document</title>
 </head>
 <body>
-  <%- include('components/navbar') %>
+  <% if (user.role === 'student') { %>
+    <%- include('components/navbar/student') %>
+  <% } else if (user.role === 'mentor') { %>
+    <%- include('components/navbar/mentor') %>
+  <% } else if (user.role === 'admin') { %>
+    <%- include('components/navbar/admin') %>
+  <% } %>
   <%- include('components/alert') %>
   <section class="container-custom w-full">
     <div class="mt-5">

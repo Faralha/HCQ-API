@@ -17,14 +17,12 @@
 <section>
   <h2 class="text-xl font-semibold mt-4">List of Class</h2>
   <p class="opacity-70">Daftar jenis kelas yang sudah dibuat</p>
-  <div class="border w-full flex flex-col items-start gap-2 mt-2">
-    <div class="w-full flex justify-between items-center bg-gray-100 p-2 rounded-md">
+  <div class="w-full flex flex-col items-start gap-2 mt-2">
+    <div class="w-full flex justify-between items-center bg-gray-100 p-2">
       <p class="w-1/4">Name</p>
-      <p class="w-1/2">Description</p>
-      <p class="w-1/4">Created By</p>
-      <p class="w-1/6">Action</p>
+      <p class="w-1/4">Action</p>
     </div>
-    <div id="classList" class="w-full flex flex-col items-start gap-2"></div>
+    <div id="classList" class="w-full flex flex-col items-start"></div>
   </div>
 </section>
 
@@ -122,12 +120,13 @@
           classList.innerHTML = '';
           result.data.forEach(item => {
             const div = document.createElement('div');
-            div.classList.add('w-full', 'flex', 'justify-between', 'items-center', 'p-2', 'rounded-md', 'bg-white');
+            div.classList.add('w-full', 'flex', 'justify-between', 'items-center', 'p-2', 'border');
             div.innerHTML = `
               <p class="w-1/4">${item.id}</p>
-              <p class="w-1/2">${item.jenis}</p>
-              <p class="w-1/4">${item.mentor}</p>
-              <button class="w-1/6 bg-red-500 text-white p-1 rounded-md" onclick="deleteClass('${item.id}')">Delete</button>
+              <div class="w-1/4 flex flex-col justify-center items-center gap-2">
+                <a href="/mentor/class/${item.id}" class="w-full text-center bg-blue-500 text-white p-1 rounded-md">Detail</a>
+                <button class="w-full bg-red-500 text-white p-1 rounded-md" onclick="deleteClass('${item.id}')">Delete</button>  
+              </div>
             `;
             classList.appendChild(div);
           });

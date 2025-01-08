@@ -9,4 +9,13 @@ router.get('/class', (req, res) => {
   });
 });
 
+router.get('/class/:id', (req, res) => {
+  res.render('main', {
+    page: 'pages/mentor/classDetail',
+    title: 'Class Detail',
+    user: req.session.user || {},
+    id: req.params.id,
+  });
+});
+
 module.exports = router;
