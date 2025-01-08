@@ -2,23 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { isAdmin } = require('../../middleware/isAdmin');
 const { getMentorDirect } = require('../../controller/admin/mentor/getMentor');
-const verifyMentor = require('../../controller/admin/mentor/verifyMentor');
-
-router.get('/register', (req, res) => {
-  res.render('adminRegister', {
-    apiLink: '/api/v1/admin/register',
-    title: 'Daftar sebagai Admin',
-    link: '/admin/register',
-  });
-});
-
-router.get('/login', (req, res) => {
-  res.render('adminLogin', {
-    apiLink: '/api/v1/admin/login',
-    title: 'Masuk sebagai Admin',
-    link: '/admin/login',
-  });
-});
 
 router.get('/mentor', isAdmin, async (req, res) => {
   try {

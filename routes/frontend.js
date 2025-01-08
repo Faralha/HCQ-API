@@ -3,11 +3,15 @@ const router = express.Router();
 const studentRoutes = require('./frontend/student');
 const mentorRoutes = require('./frontend/mentor');
 const adminRoutes = require('./frontend/admin');
+const authRoutes = require('./frontend/auth');
 const { authenticateToken } = require('../middleware/token');
+const { isAdmin } = require('../middleware/isAdmin');
+const isMentor = require('../middleware/isMentor');
 
 router.use(studentRoutes);
-router.use('/mentor', mentorRoutes);
-router.use('/admin', adminRoutes);
+router.use(authRoutes);
+router.use('/mentor', isMentor, mentorRoutes);
+router.use('/admin', isAdmin, adminRoutes);
 
 router.get('/', authenticateToken, (req, res) => {
   res.render('main', {

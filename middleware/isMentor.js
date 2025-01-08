@@ -3,6 +3,9 @@ const db = require('../db');
 
 const isMentor = async (req, res, next) => {
   try {
+    if (!req.session.user) {
+      return res.redirect('/mentor/login');
+    }
     const email = req.session.user.email;
 
     const [verified] = await db.execute(
@@ -17,9 +20,7 @@ const isMentor = async (req, res, next) => {
     } else if (verified[0].is_verified === 1) {
       return next();
     } else {
-      return res.status(401).send({
-        message: 'Unauthorized',
-      });
+      return res.redirect('/mentor/login');
     }
   } catch (error) {
     res.status(500);
