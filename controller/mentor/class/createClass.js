@@ -1,19 +1,14 @@
-const db = require('../../db');
-const getNameFromEmail = require('../../function/getNameFromEmail');
-const getEmail = require('../../function/getEmail');
+const db = require('../../../db');
 
 const createClass = async (req, res) => {
   try {
-    const { subClass } = req.body;
+    const { jenis } = req.body;
 
     const [semesterRaw] = await db.execute(
       'SELECT semester FROM semester ORDER BY semester DESC LIMIT 1',
     );
     const semester = semesterRaw[0].semester;
-    const token = req.cookies['api-auth'];
-    const email = getEmail(token);
-
-    console.log(semester);
+    const email = req.session.user.email;
 
     // Fetch Mentor Id
     const [id_mentor_raw] = await db.execute(
@@ -25,7 +20,7 @@ const createClass = async (req, res) => {
     // TAHSIN-0001 (PK example)
     const [similarClass] = await db.execute(
       'SELECT id FROM class WHERE jenis = ?',
-      [subClass],
+      [jenis],
     );
 
     var classIndex;
@@ -36,15 +31,18 @@ const createClass = async (req, res) => {
       classIndex = parseInt(classIndexRaw, 10) + 1;
     }
     const id =
-      subClass.toUpperCase() + '_' + classIndex.toString().padStart(4, '0');
+      jenis.toUpperCase() + '_' + classIndex.toString().padStart(4, '0');
 
     // INSERTION
     await db.execute(
       'INSERT INTO class (id, mentor, semester, jenis) values (?, ?, ?, ?)',
-      [id, id_mentor, semester, subClass],
+      [id, id_mentor, semester, jenis],
     );
 
-    res.send({ message: `Class ${id} created!` });
+    res.json({
+      status: 'success',
+      message: `Class ${id} created!`,
+    });
   } catch (error) {
     res.status(500);
   }

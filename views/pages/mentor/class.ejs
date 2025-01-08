@@ -2,12 +2,177 @@
 
 <!-- CREATE CLASS -->
 <section>
-  <h2 class="text-2xl font-bold mt-4">Create Class</h2>
-  <form id="createClassForm" class="w-full flex flex-col items-start">
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name" class="border border-gray-400 p-1 rounded-md mb-2" required>
-    <label for="description">Description</label>
-    <textarea name="description" id="description" class="border border-gray-400 p-1 rounded-md mb-2" required></textarea>
-    <button type="submit" class="bg-blue-500 text-white p-2 px-10 rounded-md w-full">Create</button>
+  <h2 class="text-xl font-semibold mt-4">Create Class</h2>
+  <p class="opacity-70">Buat kelas sesuai jenisnya</p>
+  <form id="createClassForm" class="w-full flex-col flex items-start">
+    <div id="innerForm" class="flex w-full items-center gap-2 mb-2 mt-2">
+      <!-- RADIO JENIS FROM FETCH -->
+    </div>
+  <input type="hidden" name="email" value="<%= user.email %>">
+  <button type="submit" class="bg-blue-500 text-white p-2 px-10 rounded-md w-full">Create</button>
   </form>
 </section>
+
+<!-- LIST OF CLASS -->
+<section>
+  <h2 class="text-xl font-semibold mt-4">List of Class</h2>
+  <p class="opacity-70">Daftar jenis kelas yang sudah dibuat</p>
+  <div class="border w-full flex flex-col items-start gap-2 mt-2">
+    <div class="w-full flex justify-between items-center bg-gray-100 p-2 rounded-md">
+      <p class="w-1/4">Name</p>
+      <p class="w-1/2">Description</p>
+      <p class="w-1/4">Created By</p>
+      <p class="w-1/6">Action</p>
+    </div>
+    <div id="classList" class="w-full flex flex-col items-start gap-2"></div>
+  </div>
+</section>
+
+<style>
+  .radio-button {
+    display: none;
+  }
+
+  .radio-button + label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0.2rem;
+    border: 2px solid #3498db;
+    border-radius: 0.25rem;
+    background-color: #f3f3f3;
+    color: #3498db;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    width: 100%;
+    text-align: center;
+  }
+
+  .radio-button:checked + label {
+    background-color: #3498db;
+    color: #fff;
+  }
+</style>
+
+<!-- FETCH CLASS -->
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+  const classList = document.getElementById('classList');
+  const createClassForm = document.getElementById('createClassForm');
+
+  createClassForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const formData = new FormData(this);
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    if (!data.jenis) {
+      showAlert('All fields are required.', 'failed');
+      return;
+    }
+
+    fetch('/api/v1/mentor/class', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          showAlert('Class created successfully.', 'success');
+          this.reset();
+          fetchClass();
+        } else {
+          showAlert(result.message, 'failed');
+        }
+      })
+      .catch(error => {
+        showAlert('Failed to create class.', 'failed');
+      });
+  });
+
+  function deleteClass(id) {
+    console.log(id);
+    fetch(`/api/v1/mentor/class/${id}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          showAlert(result.message, 'success');
+          fetchClass();
+        } else {
+          showAlert(result.message, 'failed');
+        }
+      })
+      .catch(error => {
+        showAlert('Failed to delete class.', 'failed');
+      });
+  }
+
+  function fetchClass() {
+    fetch('/api/v1/mentor/class')
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          classList.innerHTML = '';
+          result.data.forEach(item => {
+            const div = document.createElement('div');
+            div.classList.add('w-full', 'flex', 'justify-between', 'items-center', 'p-2', 'rounded-md', 'bg-white');
+            div.innerHTML = `
+              <p class="w-1/4">${item.id}</p>
+              <p class="w-1/2">${item.jenis}</p>
+              <p class="w-1/4">${item.mentor}</p>
+              <button class="w-1/6 bg-red-500 text-white p-1 rounded-md" onclick="deleteClass('${item.id}')">Delete</button>
+            `;
+            classList.appendChild(div);
+          });
+        } else {
+          showAlert(result.message, 'failed');
+        }
+      })
+      .catch(error => {
+        showAlert('Failed to fetch class.', 'failed');
+      });
+  }
+
+  function fetchJenis() {
+    fetch('/api/v1/mentor/jenis')
+      .then(response => response.json())
+      .then(result => {
+        if (result.status === 'success') {
+          const jenisOptions = document.getElementById('innerForm');
+          jenisOptions.innerHTML = '';
+          result.data.forEach(item => {
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'jenis';
+            input.value = item.jenis;
+            input.id = item.jenis;
+            input.classList.add('radio-button');
+            const label = document.createElement('label');
+            label.htmlFor = item.jenis;
+            label.textContent = item.jenis;
+            jenisOptions.appendChild(input);
+            jenisOptions.appendChild(label);
+          });
+        } else {
+          showAlert(result.message, 'failed');
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        showAlert('Failed to fetch jenis.', 'failed');
+      });
+  }
+
+
+  fetchJenis();
+  fetchClass();
+  window.deleteClass = deleteClass;
+  })
+</script>

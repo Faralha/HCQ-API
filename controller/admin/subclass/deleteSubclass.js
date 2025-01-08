@@ -1,4 +1,4 @@
-const db = require('../../db');
+const db = require('../../../db');
 
 const deleteSubClass = async (req, res) => {
   try {
