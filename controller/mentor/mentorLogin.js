@@ -23,9 +23,16 @@ const mentorLogin = async (req, res) => {
 
     // VERIFY PASSWORD
     const [emailPass] = await db.execute(
-      'SELECT password FROM mentor WHERE email = ?',
+      'SELECT password, id FROM mentor WHERE email = ?',
       [email],
     );
+
+    if (emailPass.length === 0) {
+      return res
+        .status(400)
+        .json({ status: 'failed', message: 'Access Forbidden.' });
+    }
+
     const passwordMatch = await bcrypt.compare(password, emailPass[0].password);
     if (!passwordMatch) {
       return res
@@ -37,6 +44,7 @@ const mentorLogin = async (req, res) => {
     req.session.user = {
       email: email,
       role: role,
+      id: emailPass[0].id,
     };
 
     res.json({ status: 'success', message: 'Authenticated.' });

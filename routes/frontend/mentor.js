@@ -18,4 +18,12 @@ router.get('/class/:id', (req, res) => {
   });
 });
 
+router.get('/grade', (req, res) => {
+  res.render('main', {
+    page: 'pages/mentor/grade',
+    title: 'Grade Management',
+    user: req.session.user || {},
+  });
+});
+
 module.exports = router;

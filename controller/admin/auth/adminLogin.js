@@ -16,9 +16,16 @@ let adminLogin = async (req, res) => {
     const { email, password } = sanitizedBody;
     // CHECK IF PASSWORD MATCH
     const [emailPass] = await db.execute(
-      'SELECT password FROM admin WHERE email = ?',
+      'SELECT password, id FROM admin WHERE email = ?',
       [email],
     );
+
+    if (emailPass.length === 0) {
+      return res
+        .status(400)
+        .json({ status: 'failed', message: 'Access Forbidden.' });
+    }
+
     const passwordMatch = await bcrypt.compare(password, emailPass[0].password);
 
     if (!passwordMatch) {
@@ -32,6 +39,7 @@ let adminLogin = async (req, res) => {
     req.session.user = {
       email: email,
       role: role,
+      id: emailPass[0].id,
     };
 
     res.status(200).json({ status: 'success', message: 'Authenticated.' });

@@ -49,6 +49,10 @@ router.delete('/mentor/class/:id', authenticateToken, isMentor, require('../../c
 router.get('/mentor/class', authenticateToken, isMentor, require('../../controller/mentor/class/fetchClass.js'), async (req, res) => {});
 router.get('/mentor/jenis/', authenticateToken, isMentor, require('../../controller/mentor/class/fetchJenis.js'), async(req,res)=>{});
 router.post('/mentor/class/assign', authenticateToken, isMentor, require('../../controller/mentor/classDetails/assignStudent'), async(req,res)=>{});
-router.post('/mentor/grade', authenticateToken, isMentor, require('../../controller/mentor/grade/insert'), async(req,res)=>{});
+
+router.get('/mentor/grade', authenticateToken, isMentor, require('../../controller/mentor/grade/get'), async (req, res) => { });
+router.post('/mentor/grade', authenticateToken, isMentor, require('../../controller/mentor/grade/insert'), async (req, res) => { });
+router.put('/mentor/grade', authenticateToken, isMentor, require('../../controller/mentor/grade/update'), async (req, res) => { });
+router.delete('/mentor/grade', authenticateToken, isMentor, require('../../controller/mentor/grade/delete'), async (req, res) => { });
 
 module.exports = router;

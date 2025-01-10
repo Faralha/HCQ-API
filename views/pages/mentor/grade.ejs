@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grades</title>
+    <link rel="stylesheet" href="/styles/tailwind.css" />
+    <style>
+      .collapsible {
+        cursor: pointer;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+      }
+
+      .active,
+      .collapsible:hover {
+        background-color: #ccc;
+      }
+
+      .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f9f9f9;
+      }
+
+      .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+
+      .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="gradeList" class="w-full flex flex-col items-start gap-2"></div>
+
+    <!-- Popup Overlay -->
+    <div id="popupOverlay" class="popup-overlay"></div>
+
+    <!-- Popup Div -->
+    <div id="popup" class="popup">
+      <h2>Edit Grade</h2>
+      <input
+        type="number"
+        id="editGradeInput"
+        class="border p-2 w-full mb-4"
+        placeholder="Enter new grade"
+      />
+      <button id="confirmButton" class="bg-blue-500 text-white p-2 rounded-md">
+        Confirm
+      </button>
+      <button id="cancelButton" class="bg-gray-500 text-white p-2 rounded-md">
+        Cancel
+      </button>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const gradeList = document.getElementById('gradeList');
+        const popup = document.getElementById('popup');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const editGradeInput = document.getElementById('editGradeInput');
+        const confirmButton = document.getElementById('confirmButton');
+        const cancelButton = document.getElementById('cancelButton');
+
+        let currentStudentId = null;
+        let currentClassId = null;
+
+        function fetchGrade() {
+          fetch('/api/v1/mentor/grade')
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status !== 'success') {
+                showAlert(data.message, 'failed');
+              } else {
+                gradeList.innerHTML = '';
+
+                // Group grades by class
+                const gradesByClass = data.data.reduce((acc, grade) => {
+                  if (!acc[grade.id_class]) {
+                    acc[grade.id_class] = [];
+                  }
+                  acc[grade.id_class].push(grade);
+                  return acc;
+                }, {});
+
+                // Create collapsible UI
+                for (const [classId, grades] of Object.entries(gradesByClass)) {
+                  const classElement = document.createElement('div');
+                  classElement.classList.add(
+                    'w-full',
+                    'flex',
+                    'flex-col',
+                    'bg-gray-200',
+                    'p-2',
+                    'rounded-md',
+                    'mb-2',
+                  );
+
+                  const classHeader = document.createElement('button');
+                  classHeader.classList.add('collapsible');
+                  classHeader.textContent = `Class: ${classId}`;
+                  classElement.appendChild(classHeader);
+
+                  const classContent = document.createElement('div');
+                  classContent.classList.add('content');
+
+                  grades.forEach((grade) => {
+                    const gradeValue = grade.grade !== null ? grade.grade : 0;
+                    const gradeElement = document.createElement('div');
+                    gradeElement.classList.add(
+                      'w-full',
+                      'flex',
+                      'justify-between',
+                      'items-center',
+                      'bg-white',
+                      'p-2',
+                      'rounded-md',
+                      'mb-1',
+                    );
+                    gradeElement.innerHTML = `
+                    <p class="w-1/4">${grade.student_name}</p>
+                    <p class="w-1/4">${gradeValue}</p>
+                    <button class="w-1/6 bg-blue-500 text-white p-2 rounded-md" onclick="editGrade('${grade.id_student}', '${grade.id_class}', ${gradeValue})">Edit</button>
+                  `;
+                    classContent.appendChild(gradeElement);
+                  });
+
+                  classElement.appendChild(classContent);
+                  gradeList.appendChild(classElement);
+
+                  classHeader.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (content.style.display === 'block') {
+                      content.style.display = 'none';
+                    } else {
+                      content.style.display = 'block';
+                    }
+                  });
+                }
+              }
+            })
+            .catch((error) => {
+              console.error('Error fetching grades:', error);
+              showAlert('Failed to fetch data', 'failed');
+            });
+        }
+
+        fetchGrade();
+
+        window.editGrade = function (studentId, classId, currentGrade) {
+          currentStudentId = studentId;
+          currentClassId = classId;
+          editGradeInput.value = currentGrade;
+          popup.style.display = 'block';
+          popupOverlay.style.display = 'block';
+        };
+
+        function closePopup() {
+          popup.style.display = 'none';
+          popupOverlay.style.display = 'none';
+        }
+
+        popupOverlay.addEventListener('click', closePopup);
+        cancelButton.addEventListener('click', closePopup);
+
+        confirmButton.addEventListener('click', function () {
+          const newGrade = editGradeInput.value;
+          fetch(`/api/v1/mentor/grade`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id_student: currentStudentId,
+              id_class: currentClassId,
+              grade: newGrade,
+            }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status !== 'success') {
+                showAlert(data.message, 'failed');
+              } else {
+                showAlert(data.message, 'success');
+                fetchGrade(); // Refresh the grade list
+                closePopup();
+              }
+            })
+            .catch((error) => {
+              console.error('Error updating grade:', error);
+              showAlert('Failed to update grade', 'failed');
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

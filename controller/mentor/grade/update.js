@@ -1,12 +1,12 @@
 const db = require('../../../db.js');
 const sanitizeInput = require('../../../function/sanitizeInput');
 
-const insertGrade = async (req, res) => {
+const updateGrade = async (req, res) => {
   try {
-    let studentId = req.body.id_student;
-    let classId = req.body.id_class;
-    let grade = req.body.grade;
-    if (!studentId || !classId) {
+    let studentId = req.query.student_id;
+    let classId = req.query.class_id;
+    let grade = req.query.grade;
+    if (!studentId || !classId || !grade) {
       return res.status(400).json({
         status: 'failed',
         message: 'Please fill in all required fields.',
@@ -18,26 +18,22 @@ const insertGrade = async (req, res) => {
     classId = sanitizeInput(classId);
     grade = sanitizeInput(grade);
 
-    // INSERT GRADE
+    // REMOVE GRADE
     await db.execute(
-      `
-      INSERT INTO grade (id_student, id_class, grade) 
-      VALUES (?, ?, ?) 
-      ON DUPLICATE KEY UPDATE grade = VALUES(grade);
-      `,
-      [studentId, classId, grade],
+      'UPDATE grade SET grade = ? WHERE id_student = ? AND id_class = ?',
+      [grade, studentId, classId],
     );
 
     res.json({
       status: 'success',
-      message: `Grade for student with ID ${studentId} has been inserted!`,
+      message: `Grade for student with ID ${studentId} has been updated!`,
     });
   } catch (error) {
     res.json({
       status: 'failed',
-      message: 'Failed to insert grade.',
+      message: 'Failed to update grade.',
     });
   }
 };
 
-module.exports = insertGrade;
+module.exports = updateGrade;

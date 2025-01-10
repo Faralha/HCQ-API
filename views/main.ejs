@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/styles/tailwind.css">
-  <title>Document</title>
+  <title>Dashboard</title>
 </head>
 <body>
+  <!-- NAVBAR -->
   <% if (user.role === 'student') { %>
     <%- include('components/navbar/student') %>
   <% } else if (user.role === 'mentor') { %>
@@ -14,7 +15,11 @@
   <% } else if (user.role === 'admin') { %>
     <%- include('components/navbar/admin') %>
   <% } %>
+
+  <!-- ALERT -->
   <%- include('components/alert') %>
+
+  <!-- CONTENT -->
   <section class="container-custom w-full">
     <div class="mt-5">
       <%- include(page) %>
