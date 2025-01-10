@@ -54,15 +54,15 @@ CREATE TABLE class (
 	mentor VARCHAR(255) NOT NULL,
 	semester INT NOT NULL,
 	jenis VARCHAR(255) NOT NULL,
-	FOREIGN KEY (jenis) REFERENCES jenis(jenis),
-	FOREIGN KEY (mentor) REFERENCES mentor(id)
+	FOREIGN KEY (jenis) REFERENCES jenis(jenis) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (mentor) REFERENCES mentor(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE TABLE student_class (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	id_class VARCHAR(255) NOT NULL,
 	id_student VARCHAR(10) NOT NULL,
-	FOREIGN KEY (id_class) REFERENCES class(id),
-	FOREIGN KEY (id_student) REFERENCES student(id)
+	FOREIGN KEY (id_class) REFERENCES class(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (id_student) REFERENCES student(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CLASS PROPERTIES
@@ -72,24 +72,19 @@ CREATE TABLE attendance (
 	attend BOOLEAN DEFAULT 0,
 	attend_reason VARCHAR(50) DEFAULT 'Abstain/Tanpa Keterangan',
 	attend_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (id_class) REFERENCES class(id),
-	FOREIGN KEY (id_student) REFERENCES student(id)
+	FOREIGN KEY (id_class) REFERENCES class(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (id_student) REFERENCES student(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE TABLE grade (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	id_class VARCHAR(255) NOT NULL,
 	id_student VARCHAR(10) NOT NULL,
 	grade INT DEFAULT 0,
-	FOREIGN KEY (id_class) REFERENCES class(id),
-	FOREIGN KEY (id_student) REFERENCES student(id)
+	FOREIGN KEY (id_class) REFERENCES class(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (id_student) REFERENCES student(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-CREATE TABLE grade_class (
-	id INT AUTO_INCREMENT PRIMARY KEY,
-	id_grade INT NOT NULL,
-	id_student VARCHAR(255) NOT NULL,
-	FOREIGN KEY (id_grade) REFERENCES grade(id),
-	FOREIGN KEY (id_student) REFERENCES student(id)
-);
+
+ALTER TABLE grade ADD UNIQUE KEY unique_grade (id_student, id_class);
 
 CREATE INDEX idx_student_id ON student(id);
 CREATE INDEX idx_student_class_id_class ON student_class(id_class);
@@ -98,5 +93,3 @@ CREATE INDEX idx_grade_id_student ON grade(id_student);
 CREATE INDEX idx_grade_id_class ON grade(id_class);
 CREATE INDEX idx_attendance_id_class ON attendance(id_class);
 CREATE INDEX idx_attendance_id_student ON attendance(id_student);
-CREATE INDEX idx_grade_class_id_grade ON grade_class(id_grade);
-CREATE INDEX idx_grade_class_id_student ON grade_class(id_student);

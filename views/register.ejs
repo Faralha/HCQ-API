@@ -99,7 +99,13 @@
           if (result.status === 'success') {
             showAlert(result.message, 'success');
             localStorage.removeItem('registerFormData'); // Clear saved data on success
-            window.location.href = '/login';
+            
+            if ("<%= link %>" == '/mentor/register') {
+              window.location.href = '/mentor/login';
+            } else {
+              window.location.href = '/login';
+            }
+
           } else {
             showAlert(result.message, 'failed');
           }

@@ -1,52 +1,62 @@
-<section>
-  <h1 class="text-3xl font-bold tracking-tight">Kelas</h1>
-</section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Detail</title>
+  <link rel="stylesheet" href="/styles/tailwind.css">
+</head>
+<body>
+  <section>
+    <h1 class="text-3xl font-bold tracking-tight">Kelas</h1>
+  </section>
 
-<section>
-  <h2 class="text-xl font-semibold mt-4">Add Students</h2>
-  <p class="opacity-70">Tambah Murid</p>
-  <form action="" class="flex items-end gap-3" id="searchStudentForm">
-    <div class="flex flex-col items-start justify-end gap-2 mt-2 w-3/4">
-      <label for="students">Nama Murid</label>
-      <input required type="text" name="students" id="students" class="w-full p-2 border rounded-md" />
+  <section>
+    <h2 class="text-xl font-semibold mt-4">Search Students</h2>
+    <form id="searchStudentForm" class="w-full flex flex-col items-start">
+      <div class="flex w-full items-center gap-2 mb-2 mt-2">
+        <div class="flex flex-col w-full">
+          <label for="students">Student Name</label>
+          <input type="text" name="students" id="students" class="w-full border border-gray-400 p-1 rounded-md" required>
+        </div>
+      </div>
+      <button type="submit" class="flex rounded-sm text-white px-4 py-2 w-1/4 bg-blue-500 justify-center">Search</button>
+    </form>
+    <div class="max-h-[15rem] overflow-y-scroll w-full border mt-3">
+      <div id="queryList" class="w-full flex flex-col items-start gap-2"></div>
     </div>
-    <button type="submit" class="flex rounded-sm text-white px-4 py-2 w-1/4 bg-blue-500 justify-center">Cari</button>
-  </form>
-  <div class="max-h-[15rem] overflow-y-scroll w-full border mt-3">
-    <div id="queryList" class="w-full flex flex-col items-start gap-2"></div>
-  </div>
-</section>
+  </section>
 
-<section>
-  <h2 class="text-xl font-semibold mt-4">List of Students</h2>
-  <p class="opacity-70">Daftar Murid yang sudah terdaftar di kelas</p>
-  <div class="border w-full flex flex-col items-start gap-2 mt-2">
-    <div class="w-full flex justify-between items-center bg-gray-100 p-2">
-      <p class="w-1/4">Name</p>
-      <p class="w-1/2">Email</p>
-      <p class="w-1/4">Phone Number</p>
-      <p class="w-1/6">Action</p>
+  <section>
+    <h2 class="text-xl font-semibold mt-4">List of Students</h2>
+    <p class="opacity-70">Daftar Murid yang sudah terdaftar di kelas</p>
+    <div class="border w-full flex flex-col items-start gap-2 mt-2">
+      <div class="w-full flex justify-between items-center bg-gray-100 p-2">
+        <p class="w-1/4">Name</p>
+        <p class="w-1/2">Email</p>
+        <p class="w-1/4">Phone Number</p>
+        <p class="w-1/6">Action</p>
+      </div>
+      <div id="studentList" class="w-full flex flex-col items-start gap-2"></div>
     </div>
-    <div id="studentList" class="w-full flex flex-col items-start gap-2"></div>
-  </div>
-</section>
+  </section>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function(){
-    const searchStudentForm = document.getElementById('searchStudentForm');
-    const queryList = document.getElementById('queryList');
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchStudentForm = document.getElementById('searchStudentForm');
+      const queryList = document.getElementById('queryList');
+      const studentList = document.getElementById('studentList');
+      const classId = '<%= id %>'; // Use the classId passed from the server
 
-    searchStudentForm.addEventListener('submit', function(event) {
-      event.preventDefault();
-      const students = document.getElementById('students').value;
-
-      fetch(`/api/v1/student?name=${students}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status != 'success'){
+      // Function to fetch students in the class and update the DOM
+      function fetchStudentClass() {
+        fetch(`/api/v1/student?class_id=${classId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.status !== 'success') {
               showAlert(data.message, 'failed');
             } else {
-              queryList.innerHTML = '';
+              studentList.innerHTML = '';
 
               data.data.forEach(student => {
                 const studentElement = document.createElement('div');
@@ -55,70 +65,95 @@
                   <p class="w-1/4">${student.name}</p>
                   <p class="w-1/2">${student.email}</p>
                   <p class="w-1/4">${student.phone_number}</p>
-                  <button class="w-1/6 bg-blue-500 text-white p-2 rounded-md" onclick="addStudent('${student.id}')">Add</button>
+                  <button class="w-1/6 bg-red-500 text-white p-2 rounded-md" onclick="removeStudent('${student.id}')">Remove</button>
                 `;
 
-              queryList.appendChild(studentElement);
+                studentList.appendChild(studentElement);
               });
             }
           })
           .catch(error => {
-            console.log(error);
+            console.error('Error fetching students:', error);
+            showAlert('Failed to fetch students.', 'failed');
+          });
+      }
+
+      // Fetch students in the class on page load
+      fetchStudentClass();
+
+      searchStudentForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const students = document.getElementById('students').value;
+
+        fetch(`/api/v1/student?name=${students}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.status !== 'success') {
+              showAlert(data.message, 'failed');
+            } else {
+              // Fetch students already in the class
+              fetch(`/api/v1/student?class_id=${classId}`)
+                .then(response => response.json())
+                .then(classData => {
+                  if (classData.status !== 'success') {
+                    showAlert(classData.message, 'failed');
+                  } else {
+                    const existingStudentIds = classData.data.map(student => student.id);
+                    queryList.innerHTML = '';
+
+                    data.data.forEach(student => {
+                      if (!existingStudentIds.includes(student.id)) {
+                        const studentElement = document.createElement('div');
+                        studentElement.classList.add('w-full', 'flex', 'justify-between', 'items-center', 'bg-white', 'p-2', 'rounded-md');
+                        studentElement.innerHTML = `
+                          <p class="w-1/4">${student.name}</p>
+                          <p class="w-1/2">${student.email}</p>
+                          <p class="w-1/4">${student.phone_number}</p>
+                          <button class="w-1/6 bg-blue-500 text-white p-2 rounded-md" onclick="addStudent('${student.id}')">Add</button>
+                        `;
+
+                        queryList.appendChild(studentElement);
+                      }
+                    });
+                  }
+                });
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching students:', error);
             showAlert('Failed to fetch data', 'failed');
           });
-        });
+      });
 
-    function fetchStudentClass(){
-      const classId = '<%= id %>';
-      fetch(`/api/v1/student?class_id=${classId}`)
+      // Function to add student to class
+      window.addStudent = function(studentId) {
+        fetch(`/api/v1/mentor/class/assign`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            classes: classId,
+            student: studentId
+          })
+        })
         .then(response => response.json())
         .then(data => {
-          if (data.status != 'success'){
-            showAlert(data.message, 'failed');
-          } else {
-            const studentList = document.getElementById('studentList');
-            studentList.innerHTML = '';
-
-            data.data.forEach(student => {
-              const studentElement = document.createElement('div');
-              studentElement.classList.add('w-full', 'flex', 'justify-between', 'items-center', 'bg-white', 'p-2', 'rounded-md');
-              studentElement.innerHTML = `
-                <p class="w-1/4">${student.name}</p>
-                <p class="w-1/2">${student.email}</p>
-                <p class="w-1/4">${student.phone_number}</p>
-                <button class="w-1/6 bg-red-500 text-white p-2 rounded-md" onclick="removeStudent('${student.id}')">Remove</button>
-              `;
-
-              studentList.appendChild(studentElement);
-            });
-          }
-        });
-    }
-
-    function addStudent(studentId) {
-      const classId = '<%= id %>';
-      fetch(`/api/v1/mentor/class/assign`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          'classes': classId,
-          'student': studentId
-        }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.status != 'success'){
+          if (data.status !== 'success') {
             showAlert(data.message, 'failed');
           } else {
             showAlert(data.message, 'success');
-            fetchStudentClass();
+            fetchStudentClass(); // Refresh the student list
+            
           }
+        })
+        .catch(error => {
+          console.error('Error adding student to class:', error);
+          showAlert('Failed to add student to class.', 'failed');
         });
-    }
+      };
 
-    function removeStudent(studentId) {
+      window.removeStudent = function removeStudent(studentId) {
       const classId = '<%= id %>';
       fetch(`/api/v1/class?class_id=${classId}&student_id=${studentId}`, {
         method: 'DELETE',
@@ -140,9 +175,7 @@
           }
         });
     }
-
-    fetchStudentClass();
-    window.removeStudent = removeStudent;
-    window.addStudent = addStudent;
     });
-</script>
+  </script>
+</body>
+</html>

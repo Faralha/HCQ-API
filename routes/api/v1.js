@@ -31,6 +31,8 @@ router.get('/student', authenticateToken, isAdminOrMentor, require('../../contro
 router.get('/student/class', authenticateToken, require('../../controller/student/queryClass'), async(req,res)=>{});
 router.get('/checkAuth', authenticateToken, require('../../controller/checkAuth'), async(req, res)=>{});
 
+router.get('/grade', authenticateToken, require('../../controller/student/grade'), async (req, res) => { });
+
 // ADMIN ONLY ROUTES
 router.get('/mentors', authenticateToken, isAdmin, require('../../controller/admin/mentor/getMentor'), async (req, res) => { });
 router.post('/admin/mentor/verify', authenticateToken, isAdmin, require('../../controller/admin/mentor/verifyMentor'), async (req, res) => {});

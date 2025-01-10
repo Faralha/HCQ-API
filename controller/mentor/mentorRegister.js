@@ -4,6 +4,7 @@ const sanitizeInput = require('../../function/sanitizeInput');
 
 let mentorRegister = async (req, res) => {
   try {
+    console.log('masuk');
     const sanitizedBody = {};
 
     for (const key in req.body) {
