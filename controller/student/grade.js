@@ -24,7 +24,6 @@ const getGrade = async (req, res) => {
       status: 'success',
       data: grade,
     });
-
   } catch (error) {
     res.json({
       status: 'failed',
