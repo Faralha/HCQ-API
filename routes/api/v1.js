@@ -13,12 +13,15 @@ router.post('/mentor/register', require('../../controller/mentor/mentorRegister.
 router.post('/mentor/login', require('../../controller/mentor/mentorLogin'), async (req, res) =>{});
 router.post('/admin/register', require('../../controller/admin/auth/adminRegister.js'), async (req, res)=>{});
 router.post('/admin/login', require('../../controller/admin/auth/adminLogin.js'), async (req, res) => {});
+
+
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) return res.status(500).send("Error logging out");
-    res.redirect('/login');
+    res.status(200).send("Logged out");
     })
 })
+router.get('/token', require('../../controller/checkAuth'), async (req, res) => {});
 
 // PUBLIC ROUTES (for Students, authentication is a must)
 router.get('/user', authenticateToken, require('../../controller/user'), async (req, res) => {});
@@ -26,8 +29,8 @@ router.get('/class', authenticateToken, require('../../controller/classes/classe
 router.delete('/class', authenticateToken, isAdminOrMentor, require('../../controller/mentor/classDetails/removeStudent'), async (req, res) => { });
 router.get('/attendance', authenticateToken, require('../../controller/classes/attendance/attendance'), async (req, res) => { });
 router.post('/attendance/:classes', authenticateToken, require('../../controller/classes/attendance/queryAttendance'), async(req,res)=>{});
-// router.get('/students', authenticateToken, isAdminOrMentor, require('../../controller/student/allStudent'), async(req,res)=>{});
-router.get('/student', authenticateToken, isAdminOrMentor, require('../../controller/student/queryStudent'), async (req, res) => {});
+
+router.get('/student', authenticateToken, isAdminOrMentor, require('../../controller/student/queryStudent'), async (req, res) => { });
 router.get('/student/class', authenticateToken, require('../../controller/student/queryClass'), async(req,res)=>{});
 router.get('/checkAuth', authenticateToken, require('../../controller/checkAuth'), async(req, res)=>{});
 

@@ -64,6 +64,7 @@ let mentorRegister = async (req, res) => {
         'Mentor Account has been created! Wait for verification by Admin.',
     });
   } catch (error) {
+    console.log(error);
     res.status(500);
   }
 };

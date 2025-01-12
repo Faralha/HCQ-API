@@ -3,17 +3,17 @@ const bcrypt = require('bcrypt');
 const sanitizeInput = require('../../function/sanitizeInput');
 
 let register = async (req, res) => {
-  const sanitizedBody = {};
+  // const sanitizedBody = {};
 
-  for (const key in req.body) {
-    if (req.body.hasOwnProperty(key)) {
-      sanitizedBody[key] = sanitizeInput(req.body[key]);
-    }
-  }
+  // for (const key in req.body) {
+  //   if (req.body.hasOwnProperty(key)) {
+  //     sanitizedBody[key] = sanitizeInput(req.body[key]);
+  //   }
+  // }
 
   try {
     // SANITIZE + INPUT CHECK
-    const { email, name, password, city, address, phonenumber } = sanitizedBody;
+    const { email, name, password, city, address, phonenumber } = req.body;
     if (!email || !name || !password || !phonenumber) {
       return res.status(400).send({ message: 'Data tidak lengkap.' });
     }
