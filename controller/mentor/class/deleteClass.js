@@ -2,7 +2,7 @@ const db = require('../../../db');
 
 const deleteClass = async (req, res) => {
   try {
-    const id = req.params.id;
+    const {id} = req.body;
 
     // CHECK VALIDITY
     const [similar] = await db.execute('SELECT id FROM class where id = ?', [

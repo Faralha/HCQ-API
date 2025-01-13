@@ -2,20 +2,12 @@ const db = require('../../../db');
 
 const createClass = async (req, res) => {
   try {
-    const { jenis } = req.body;
+    const { jenis, id_mentor } = req.body;
 
     const [semesterRaw] = await db.execute(
       'SELECT semester FROM semester ORDER BY semester DESC LIMIT 1',
     );
     const semester = semesterRaw[0].semester;
-    const email = req.session.user.email;
-
-    // Fetch Mentor Id
-    const [id_mentor_raw] = await db.execute(
-      'SELECT id FROM mentor WHERE email = ?',
-      [email],
-    );
-    const id_mentor = id_mentor_raw[0].id;
 
     // TAHSIN-0001 (PK example)
     const [similarClass] = await db.execute(
@@ -44,6 +36,7 @@ const createClass = async (req, res) => {
       message: `Class ${id} created!`,
     });
   } catch (error) {
+    console.log(error);
     res.status(500);
   }
 };

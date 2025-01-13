@@ -4,7 +4,7 @@ const db = require('../db');
 const isMentor = async (req, res, next) => {
   try {
     if (!req.session.user) {
-      return res.redirect('/mentor/login');
+      return res.status(401);
     }
     const email = req.session.user.email;
 
@@ -20,7 +20,7 @@ const isMentor = async (req, res, next) => {
     } else if (verified[0].is_verified === 1) {
       return next();
     } else {
-      return res.redirect('/mentor/login');
+      return res.status(401);
     }
   } catch (error) {
     res.status(500);

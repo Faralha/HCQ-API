@@ -18,6 +18,7 @@ const verifyMentor = async (req, res) => {
       message: 'Successfully verified mentor!',
     });
   } catch (error) {
+    console.log(error);
     res.status(500);
   }
 };

@@ -36,22 +36,27 @@ router.get('/checkAuth', authenticateToken, require('../../controller/checkAuth'
 
 router.get('/grade', authenticateToken, require('../../controller/student/grade'), async (req, res) => { });
 
+
+
 // ADMIN ONLY ROUTES
 router.get('/mentors', authenticateToken, isAdmin, require('../../controller/admin/mentor/getMentor'), async (req, res) => { });
 router.post('/admin/mentor/verify', authenticateToken, isAdmin, require('../../controller/admin/mentor/verifyMentor'), async (req, res) => {});
-router.get('/admin/class', authenticateToken, isAdmin, require('../../controller/admin/subclass/fetchSubclass.js'), async(req, res)=>{});
-router.post('/admin/class', authenticateToken, isAdmin, require('../../controller/admin/subclass/createSubclass.js'), async (req, res) => {})
-router.delete('/admin/class/:id', isAdmin, require('../../controller/admin/subclass/deleteSubclass.js'), async (req, res) => {})
-router.post('/admin/semester/create', authenticateToken, isAdmin, require('../../controller/admin/semester/createSemester'), async(req, res) => {});
+
+router.get('/admin/course', authenticateToken, isAdmin, require('../../controller/admin/subclass/fetchSubclass.js'), async (req, res) => { });
+router.post('/admin/course', authenticateToken, isAdmin, require('../../controller/admin/subclass/createSubclass.js'), async (req, res) => {})
+router.delete('/admin/course', isAdmin, require('../../controller/admin/subclass/deleteSubclass.js'), async (req, res) => {})
+
+router.post('/admin/semester/create', authenticateToken, isAdmin, require('../../controller/admin/semester/createSemester'), async (req, res) => { });
+router.get('/admin/semester', authenticateToken, isAdmin, require('../../controller/admin/semester/fetchSemester'), async(req, res) => {});
+
+router.get('/admin/class', authenticateToken, isAdmin, require('../../controller/mentor/class/fetchClass.js'), async (req, res) => {});
+router.post('/admin/class', authenticateToken, isAdmin, require('../../controller/mentor/class/createClass.js'), async (req, res) => {});
+router.delete('/admin/class', authenticateToken, isAdmin, require('../../controller/mentor/class/deleteClass.js'), async (req, res) => {});
+
+
 
 // MENTOR ONLY ROUTES
-// router.get('/mentor', authenticateToken, isMentor, async (req, res) => {
-//     res.json("Hi");
-// });
 router.post('/mentor/create/attendance', authenticateToken, isMentor, require('../../controller/mentor/newAttendance'), async(req,res) => {});
-router.post('/mentor/class', authenticateToken, isMentor, require('../../controller/mentor/class/createClass.js'), async (req, res) => {});
-router.delete('/mentor/class/:id', authenticateToken, isMentor, require('../../controller/mentor/class/deleteClass.js'), async (req, res) => {});
-router.get('/mentor/class', authenticateToken, isMentor, require('../../controller/mentor/class/fetchClass.js'), async (req, res) => {});
 router.get('/mentor/jenis/', authenticateToken, isMentor, require('../../controller/mentor/class/fetchJenis.js'), async(req,res)=>{});
 router.post('/mentor/class/assign', authenticateToken, isMentor, require('../../controller/mentor/classDetails/assignStudent'), async(req,res)=>{});
 

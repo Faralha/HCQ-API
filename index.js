@@ -34,8 +34,14 @@ app.use(
   }),
 );
 
+function delay(req, res, next) {
+  setTimeout(() => {
+    next();
+  }, 1000);
+}
+
 // USE ROUTES
-app.use('/api/v1/', apiV1);
+app.use('/api/v1/', delay, apiV1);
 app.use(frontend);
 
 app.listen(port, () => {

@@ -2,7 +2,8 @@ const db = require('../../../db');
 
 const createSubClass = async (req, res) => {
   try {
-    const { jenis, keterangan, email } = req.body;
+    const { jenis, keterangan } = req.body;
+    const email = req.session.user.email;
     const [similar] = await db.execute(
       'SELECT jenis FROM JENIS where jenis = ?',
       [jenis],
