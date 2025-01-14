@@ -2,11 +2,8 @@ const db = require('../../db');
 
 const allStudent = async (req, res) => {
   try {
-    const [result] = await db.execute('SELECT * FROM student');
-    res.json({
-      data: result,
-      status: 'success',
-    });
+    const [data] = await db.execute('SELECT * FROM student');
+    res.json(data);
   } catch (error) {
     res.status(500);
   }

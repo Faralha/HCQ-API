@@ -9,10 +9,7 @@ const queryStudent = async (req, res) => {
         const [result] = await db.execute(
           'SELECT id, name, email, phone_number FROM student',
         );
-        return res.json({
-          data: result,
-          status: 'success',
-        });
+        return res.json(result);
       } catch (error) {
         return res.status(500);
       }
@@ -25,10 +22,7 @@ const queryStudent = async (req, res) => {
         [req.query.class_id],
       );
 
-      return res.json({
-        data: classMember,
-        status: 'success',
-      });
+      return res.json(classMember);
     }
 
     // QUERIES STUDENT BY NAME

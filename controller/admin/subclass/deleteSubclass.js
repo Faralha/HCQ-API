@@ -2,7 +2,7 @@ const db = require('../../../db');
 
 const deleteSubClass = async (req, res) => {
   try {
-    const {jenis} = req.body;
+    const { jenis } = req.body;
     console.log(jenis);
     await db.execute('DELETE FROM jenis WHERE jenis = ?', [jenis]);
     res.send({

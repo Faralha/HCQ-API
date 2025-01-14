@@ -26,7 +26,7 @@ router.get('/token', require('../../controller/checkAuth'), async (req, res) => 
 // PUBLIC ROUTES (for Students, authentication is a must)
 router.get('/user', authenticateToken, require('../../controller/user'), async (req, res) => {});
 router.get('/class', authenticateToken, require('../../controller/classes/classes.js'), async(req, res) => {});
-router.delete('/class', authenticateToken, isAdminOrMentor, require('../../controller/mentor/classDetails/removeStudent'), async (req, res) => { });
+// router.delete('/class', authenticateToken, isAdminOrMentor, require('../../controller/mentor/classDetails/removeStudent'), async (req, res) => { });
 router.get('/attendance', authenticateToken, require('../../controller/classes/attendance/attendance'), async (req, res) => { });
 router.post('/attendance/:classes', authenticateToken, require('../../controller/classes/attendance/queryAttendance'), async(req,res)=>{});
 
@@ -52,13 +52,13 @@ router.get('/admin/semester', authenticateToken, isAdmin, require('../../control
 router.get('/admin/class', authenticateToken, isAdmin, require('../../controller/mentor/class/fetchClass.js'), async (req, res) => {});
 router.post('/admin/class', authenticateToken, isAdmin, require('../../controller/mentor/class/createClass.js'), async (req, res) => {});
 router.delete('/admin/class', authenticateToken, isAdmin, require('../../controller/mentor/class/deleteClass.js'), async (req, res) => {});
-
-
+router.get('/admin/class/:id', authenticateToken, isAdmin, require('../../controller/mentor/class/fetchClassDetails.js'), async (req, res) => {});
+router.post('/admin/class/assign', authenticateToken, isAdmin, require('../../controller/mentor/classDetails/assignStudent'), async(req,res)=>{});
+router.delete('/admin/class/remove', authenticateToken, isAdmin, require('../../controller/mentor/classDetails/removeStudent'), async(req,res)=>{});
 
 // MENTOR ONLY ROUTES
 router.post('/mentor/create/attendance', authenticateToken, isMentor, require('../../controller/mentor/newAttendance'), async(req,res) => {});
 router.get('/mentor/jenis/', authenticateToken, isMentor, require('../../controller/mentor/class/fetchJenis.js'), async(req,res)=>{});
-router.post('/mentor/class/assign', authenticateToken, isMentor, require('../../controller/mentor/classDetails/assignStudent'), async(req,res)=>{});
 
 router.get('/mentor/grade', authenticateToken, isMentor, require('../../controller/mentor/grade/get'), async (req, res) => { });
 router.post('/mentor/grade', authenticateToken, isMentor, require('../../controller/mentor/grade/insert'), async (req, res) => { });
