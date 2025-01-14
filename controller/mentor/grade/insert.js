@@ -3,9 +3,10 @@ const sanitizeInput = require('../../../function/sanitizeInput');
 
 const insertGrade = async (req, res) => {
   try {
-    let studentId = req.body.id_student;
-    let classId = req.body.id_class;
-    let grade = req.body.grade;
+    const studentId = req.body.id_student;
+    const classId = req.body.id_class;
+    const grade = req.body.grade;
+
     if (!studentId || !classId) {
       return res.status(400).json({
         status: 'failed',
@@ -13,10 +14,12 @@ const insertGrade = async (req, res) => {
       });
     }
 
-    // SANITIZE INPUT
-    studentId = sanitizeInput(studentId);
-    classId = sanitizeInput(classId);
-    grade = sanitizeInput(grade);
+    // // SANITIZE INPUT
+    // studentId = sanitizeInput(studentId);
+    // classId = sanitizeInput(classId);
+    // grade = sanitizeInput(grade);
+
+    console.log(studentId, classId, grade);
 
     // INSERT GRADE
     await db.execute(
@@ -33,6 +36,7 @@ const insertGrade = async (req, res) => {
       message: `Grade for student with ID ${studentId} has been inserted!`,
     });
   } catch (error) {
+    console.log(error);
     res.json({
       status: 'failed',
       message: 'Failed to insert grade.',
