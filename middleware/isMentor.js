@@ -20,9 +20,10 @@ const isMentor = async (req, res, next) => {
     } else if (verified[0].is_verified === 1) {
       return next();
     } else {
-      return res.status(401);
+      return res.status(401).json({ message: 'Access Forbidden.' });
     }
   } catch (error) {
+    console.log(error);
     res.status(500);
   }
 };

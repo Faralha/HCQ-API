@@ -23,6 +23,11 @@ router.get('/logout', (req, res) => {
 })
 router.get('/token', require('../../controller/checkAuth'), async (req, res) => {});
 
+// MIDDLEWARE AUTH VERIFICATION
+router.get('/auth/admin', authenticateToken, isAdmin, async(req, res) => { return res.json("ok") });
+router.get('/auth/mentor', authenticateToken, isMentor, async(req, res) => { return res.json("ok") });
+
+
 // PUBLIC ROUTES (for Students, authentication is a must)
 router.get('/user', authenticateToken, require('../../controller/user'), async (req, res) => {});
 router.get('/class', authenticateToken, require('../../controller/classes/classes.js'), async(req, res) => {});

@@ -7,28 +7,25 @@ const getGrade = async (req, res) => {
     const [grade] = await db.execute(
       `
       SELECT 
-      g.grade, 
-      g.id_class, 
-      c.semester 
+        g.grade, 
+        g.id_class, 
+        c.semester,
+        j.jenis
       FROM 
         grade g
       JOIN 
         class c ON g.id_class = c.id
+      JOIN 
+        jenis j ON c.jenis = j.jenis
       WHERE 
         g.id_student = ?
       `,
       [studentId],
     );
 
-    res.json({
-      status: 'success',
-      data: grade,
-    });
+    res.json(grade);
   } catch (error) {
-    res.json({
-      status: 'failed',
-      message: 'Failed to get grade.',
-    });
+    console.log(error);
   }
 };
 
