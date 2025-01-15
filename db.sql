@@ -84,6 +84,18 @@ CREATE TABLE grade (
 	FOREIGN KEY (id_student) REFERENCES student(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- PAYMENT DUES
+CREATE TABLE tuition (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	id_student VARCHAR(10) NOT NULL,
+	semester INT NOT NULL,
+	amount INT DEFAULT 0,
+	paid BOOLEAN DEFAULT 0,	
+	last_paid TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	UNIQUE KEY unique_tuition (id_student, semester),
+	FOREIGN KEY (id_student) REFERENCES student(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 ALTER TABLE grade ADD UNIQUE KEY unique_grade (id_student, id_class);
 
 CREATE INDEX idx_student_id ON student(id);

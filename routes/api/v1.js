@@ -34,13 +34,13 @@ router.get('/class', authenticateToken, require('../../controller/classes/classe
 // router.delete('/class', authenticateToken, isAdminOrMentor, require('../../controller/mentor/classDetails/removeStudent'), async (req, res) => { });
 router.get('/attendance', authenticateToken, require('../../controller/classes/attendance/attendance'), async (req, res) => { });
 router.post('/attendance/:classes', authenticateToken, require('../../controller/classes/attendance/queryAttendance'), async(req,res)=>{});
-
+router.get('/semester', authenticateToken, require('../../controller/semester'), async (req, res) => {});
 router.get('/student', authenticateToken, isAdminOrMentor, require('../../controller/student/queryStudent'), async (req, res) => { });
 router.get('/student/class', authenticateToken, require('../../controller/student/queryClass'), async(req,res)=>{});
 router.get('/checkAuth', authenticateToken, require('../../controller/checkAuth'), async(req, res)=>{});
 
 router.get('/grade', authenticateToken, require('../../controller/student/grade'), async (req, res) => { });
-
+router.get('/student/tuition', authenticateToken, require('../../controller/student/tuition'), async (req, res) => { });
 
 
 // ADMIN ONLY ROUTES
@@ -60,6 +60,11 @@ router.delete('/admin/class', authenticateToken, isAdmin, require('../../control
 router.get('/admin/class/:id', authenticateToken, isAdmin, require('../../controller/admin/class/fetchClassDetails.js'), async (req, res) => {});
 router.post('/admin/class/assign', authenticateToken, isAdmin, require('../../controller/admin/classDetails/assignStudent.js'), async(req,res)=>{});
 router.delete('/admin/class/remove', authenticateToken, isAdmin, require('../../controller/admin/classDetails/removeStudent.js'), async(req,res)=>{});
+
+router.get('/admin/tuition', authenticateToken, isAdmin, require('../../controller/admin/tuition/get'), async (req, res) => { });
+router.post('/admin/tuition', authenticateToken, isAdmin, require('../../controller/admin/tuition/add'), async (req, res) => { });
+
+
 
 // MENTOR ONLY ROUTES
 router.post('/mentor/create/attendance', authenticateToken, isMentor, require('../../controller/mentor/newAttendance'), async(req,res) => {});
